@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hasanat Score</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07130f; --bg2:#0c1f19; --card:#10261f; --card2:#143029; --line:rgba(212,175,95,.16);
+  --ink:#f3ecdc; --mute:#a9b5ad; --dim:#6f8178;
+  --gold:#d9b46a; --gold2:#f1d79c;
+  --wajib:#d9b46a; --hasanat:#3ccf91; --saghaira:#f0a24a; --kabaira:#ff5d6c; --islah:#5cc8e8;
+  --r:18px;
+  --fh:'Cormorant Garamond',Georgia,serif; --fb:'Manrope',system-ui,sans-serif;
+}
+html[dir=rtl]{--fh:'Amiri',serif; --fb:'IBM Plex Sans Arabic',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(217,180,106,.18),transparent 60%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23d9b46a' stroke-opacity='.06'%3E%3Cpath d='M40 4l10 26 26 10-26 10-10 26-10-26L4 40l26-10z'/%3E%3Ccircle cx='40' cy='40' r='14'/%3E%3C/g%3E%3C/svg%3E");}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,textarea{font:inherit;color:var(--ink)}
+.wrap{max-width:980px;margin:0 auto;padding:18px 16px 110px}
+header{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:6px 0 14px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;flex:none}
+.brand h1{font-family:var(--fh);font-weight:700;font-size:28px;letter-spacing:.3px;line-height:1;background:linear-gradient(90deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand small{display:block;color:var(--mute);font-size:12px;margin-top:4px;letter-spacing:.4px}
+.hdr-r{display:flex;gap:6px;align-items:center}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:rgba(0,0,0,.25)}
+.lang button{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700;color:var(--mute)}
+.lang button.on{background:var(--gold);color:#1b1408}
+.icbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--gold)}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;justify-content:center;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(7,19,15,.95) 30%)}
+.tabbar{display:flex;gap:4px;background:rgba(16,38,31,.92);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:999px;padding:5px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.tabbar button{display:flex;align-items:center;gap:7px;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:600;color:var(--mute)}
+.tabbar button.on{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1b1408}
+.tabbar svg{width:18px;height:18px}
+@media(max-width:520px){.tabbar button span{display:none}.tabbar button{padding:11px 18px}}
+.datebar{display:flex;align-items:center;justify-content:center;gap:14px;margin:4px 0 14px}
+.datebar .d{font-weight:700;font-size:15px;min-width:190px;text-align:center}
+.datebar .d small{display:block;color:var(--mute);font-weight:500;font-size:12px}
+.datebar button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);color:var(--gold)}
+.datebar button:disabled{opacity:.25;cursor:default}
+html[dir=rtl] .flip{transform:scaleX(-1)}
+/* hero */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:760px){.hero{grid-template-columns:1fr}}
+.panel{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--r);padding:18px;position:relative;overflow:hidden}
+.mizan-wrap{display:flex;flex-direction:column;align-items:center}
+.mizan{width:100%;max-width:360px;height:auto}
+.mizan .beam,.mizan .panL,.mizan .panR{transition:transform 1s cubic-bezier(.34,1.4,.5,1);transform-box:view-box}
+.net{font-family:var(--fh);font-size:56px;font-weight:700;line-height:1;margin-top:-4px}
+.net.pos{color:var(--hasanat)} .net.neg{color:var(--kabaira)} .net.zero{color:var(--gold2)}
+.netlbl{color:var(--mute);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
+.verdict{margin-top:12px;text-align:center;font-size:14px;line-height:1.5;padding:10px 14px;border-radius:12px;background:rgba(0,0,0,.22);border:1px solid var(--line)}
+.verdict.heavy{border-color:rgba(255,93,108,.5);color:#ffc2c8;background:rgba(255,93,108,.08)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stat b{font-size:24px;font-family:var(--fh);display:block;line-height:1.1}
+.stat span{font-size:11.5px;color:var(--mute)}
+.pbars{margin-top:12px;display:flex;flex-direction:column;gap:9px}
+.pbar{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:center;font-size:12.5px}
+.pbar .ic{font-size:17px;text-align:center}
+.pbar .track{height:9px;border-radius:9px;background:rgba(255,255,255,.06);position:relative;overflow:hidden;margin-top:4px}
+.pbar .g{position:absolute;inset-block:0;inset-inline-start:0;background:linear-gradient(90deg,#1f8f63,var(--hasanat));border-radius:9px;transition:width .8s}
+.pbar .b{position:absolute;inset-block:0;inset-inline-end:0;background:linear-gradient(90deg,#ff8a6b,var(--kabaira));border-radius:9px;transition:width .8s}
+.pbar em{font-style:normal;font-weight:700;font-size:12px;min-width:38px;text-align:end}
+.est{margin:0 0 14px;padding:12px 16px;border-radius:14px;border:1px dashed rgba(217,180,106,.55);background:rgba(217,180,106,.07);font-size:13px;line-height:1.6;color:var(--mute)}.est b{color:var(--gold2);display:block;font-size:14px;margin-bottom:2px}
+.introline{text-align:center;color:var(--mute);font-size:13px;line-height:1.5;margin:-6px auto 12px;max-width:620px}
+.info{width:17px;height:17px;border-radius:50%;display:inline-grid;place-items:center;font-size:10.5px;font-weight:800;font-style:italic;font-family:Georgia,serif;color:var(--gold2);border:1px solid rgba(217,180,106,.45);background:rgba(217,180,106,.08);cursor:pointer;opacity:.75}
+.info:hover{opacity:1;background:rgba(217,180,106,.2)}
+.refs{display:flex;flex-wrap:wrap;gap:6px}
+.reflink{font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);color:var(--gold2);text-decoration:none;background:rgba(0,0,0,.2)}
+a.reflink:hover{border-color:var(--gold)}
+.modal.mini{max-width:380px;padding:16px}
+.scorepill{position:fixed;z-index:19;bottom:84px;inset-inline-end:16px;padding:9px 14px;border-radius:999px;background:rgba(16,38,31,.95);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.45);font-size:13px;color:var(--mute)}
+.scorepill b{font-size:15px;margin-inline-start:4px}
+.scorepill.pos b{color:var(--hasanat)}.scorepill.neg b{color:var(--kabaira)}.scorepill.zero b{color:var(--gold2)}
+.muflis{margin:0 0 14px;padding:16px 18px;border-radius:var(--r);border:1px solid rgba(217,180,106,.35);background:linear-gradient(120deg,rgba(217,180,106,.12),rgba(217,180,106,.03));display:flex;gap:14px;align-items:flex-start}
+.muflis .q{font-family:var(--fh);font-size:19px;line-height:1.45;color:var(--gold2)}
+html[dir=rtl] .muflis .q{font-size:21px}
+.muflis small{display:block;color:var(--mute);margin-top:6px;font-size:12px}
+.muflis svg{flex:none;width:30px;color:var(--gold);margin-top:3px}
+/* filters */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;padding:9px 14px;border-radius:999px;border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--mute);background:rgba(0,0,0,.18)}
+.chip.on{color:#1b1408;background:var(--gold);border-color:var(--gold)}
+/* tiers */
+.tier{margin-bottom:18px}
+.tier-h{display:flex;align-items:baseline;gap:10px;margin:6px 2px 10px;flex-wrap:wrap}
+.tier-h h2{font-family:var(--fh);font-size:24px;font-weight:700;display:flex;align-items:center;gap:9px}
+.tier-h h2 i{width:10px;height:10px;border-radius:3px;transform:rotate(45deg);display:inline-block}
+.tier-h p{color:var(--mute);font-size:12.5px}
+.tier-h .sum{margin-inline-start:auto;font-weight:800;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:9px}
+.item{position:relative;text-align:start;display:flex;gap:11px;align-items:center;padding:12px 12px;border-radius:14px;background:var(--card);border:1px solid rgba(255,255,255,.05);transition:transform .15s,border-color .2s,background .2s;min-height:62px}
+.item:hover{border-color:var(--line)}
+.item:active{transform:scale(.98)}
+.item .em{font-size:20px;width:34px;height:34px;flex:none;display:grid;place-items:center;border-radius:10px;background:rgba(255,255,255,.04)}
+.item .tx{flex:1;min-width:0}
+.item .nm{font-size:13.5px;font-weight:600;line-height:1.3}
+.item .meta{display:flex;gap:6px;align-items:center;margin-top:3px;flex-wrap:wrap}
+.pts{font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px}
+.hr{font-size:10px;font-weight:700;padding:2px 6px;border-radius:999px;border:1px solid rgba(255,93,108,.45);color:#ffaab3}
+.cnt{min-width:30px;height:30px;padding:0 8px;border-radius:999px;display:grid;place-items:center;font-weight:800;font-size:13px;flex:none}
+.minus{position:absolute;top:-7px;inset-inline-end:-7px;width:24px;height:24px;border-radius:50%;background:#26372f;border:1px solid var(--line);font-weight:800;font-size:14px;line-height:1;display:none;color:var(--mute)}
+.item.has .minus{display:grid;place-items:center}
+.t-wajib .pts{background:rgba(217,180,106,.15);color:var(--wajib)}
+.t-hasanat .pts{background:rgba(60,207,145,.13);color:var(--hasanat)}
+.t-saghaira .pts{background:rgba(240,162,74,.13);color:var(--saghaira)}
+.t-kabaira .pts{background:rgba(255,93,108,.14);color:var(--kabaira)}
+.t-islah .pts{background:rgba(92,200,232,.14);color:var(--islah)}
+.t-islah.has{background:linear-gradient(135deg,rgba(92,200,232,.22),rgba(92,200,232,.05));border-color:rgba(92,200,232,.55)}
+.t-islah.has .cnt{background:var(--islah);color:#04202a}
+.islah-note{margin:-2px 2px 10px;font-size:12.5px;color:#9fdcef;line-height:1.55}
+.t-wajib.has{background:linear-gradient(135deg,rgba(217,180,106,.22),rgba(217,180,106,.06));border-color:rgba(217,180,106,.55)}
+.t-hasanat.has{background:linear-gradient(135deg,rgba(60,207,145,.2),rgba(60,207,145,.05));border-color:rgba(60,207,145,.5)}
+.t-saghaira.has{background:linear-gradient(135deg,rgba(240,162,74,.18),rgba(240,162,74,.04));border-color:rgba(240,162,74,.5)}
+.t-kabaira{background:linear-gradient(135deg,#1b1a1d,#16201d)}
+.t-kabaira.has{background:linear-gradient(135deg,rgba(255,93,108,.24),rgba(255,93,108,.06));border-color:rgba(255,93,108,.6);box-shadow:0 0 24px rgba(255,93,108,.18)}
+.t-wajib .cnt{border:2px solid rgba(217,180,106,.5);color:#1b1408}
+.t-wajib.has .cnt{background:var(--gold)}
+.t-hasanat.has .cnt{background:var(--hasanat);color:#062015}
+.t-saghaira.has .cnt{background:var(--saghaira);color:#2a1503}
+.t-kabaira.has .cnt{background:var(--kabaira);color:#2a0307}
+.item:not(.has):not(.t-wajib) .cnt{color:var(--dim);border:1px dashed rgba(255,255,255,.12)}
+/* repair */
+.repair{border:1px solid rgba(255,93,108,.45);background:linear-gradient(135deg,rgba(255,93,108,.1),rgba(0,0,0,.15));border-radius:var(--r);padding:14px 16px;margin-bottom:12px}
+.repair h3{font-size:14px;color:#ffc2c8;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+.rrow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 0;border-top:1px solid rgba(255,255,255,.06)}
+.rrow:first-of-type{border-top:0}
+.rrow .rn{flex:1 1 220px;font-weight:600;font-size:13.5px}
+.rrow .rn.ok{color:var(--mute);text-decoration:line-through}
+.tog{display:flex;align-items:center;gap:7px;font-size:12.5px;padding:7px 11px;border-radius:999px;border:1px solid var(--line);color:var(--mute)}
+.tog.on{background:rgba(60,207,145,.15);border-color:rgba(60,207,145,.55);color:#bff5dd}
+.tog .bx{width:16px;height:16px;border-radius:5px;border:1.5px solid currentColor;display:grid;place-items:center;font-size:11px}
+/* reflect */
+textarea.note{width:100%;min-height:90px;resize:vertical;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:14px;line-height:1.6;outline:none}
+textarea.note:focus{border-color:var(--gold)}
+.sec-title{font-family:var(--fh);font-size:24px;font-weight:700;margin:22px 2px 10px}
+.foot{color:var(--dim);font-size:12px;text-align:center;margin-top:26px;line-height:1.7}
+.foot b{color:var(--gold)}
+/* history */
+.chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mute);margin-top:8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;vertical-align:-1px}
+.hgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:640px){.hgrid{grid-template-columns:repeat(2,1fr)}}
+.heat{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+@media(max-width:640px){.heat{grid-template-columns:repeat(2,1fr)}}
+.hc{border-radius:14px;padding:12px;background:rgba(0,0,0,.2);border:1px solid var(--line)}
+.hc .h1{font-size:13px;font-weight:700;display:flex;gap:6px;align-items:center}
+.hc .h2{font-size:22px;font-family:var(--fh);font-weight:700;margin-top:6px}
+.hc .h3{font-size:11.5px;color:var(--mute)}
+/* kabair page */
+.kintro{font-size:15px;color:var(--mute);line-height:1.6;margin-bottom:14px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 4px}
+@media(max-width:700px){.steps{grid-template-columns:repeat(2,1fr)}}
+.step{background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13px;line-height:1.45}
+.step b{display:block;font-family:var(--fh);font-size:26px;color:var(--gold);line-height:1}
+.klist{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.kcard{border-radius:16px;padding:14px;background:linear-gradient(150deg,#211a1e,#14211c);border:1px solid rgba(255,93,108,.22);position:relative;overflow:hidden}
+.kcard::before{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--kabaira);box-shadow:0 0 18px var(--kabaira)}
+.kcard .top{display:flex;gap:10px;align-items:center}
+.kcard .em{font-size:22px}
+.kcard h4{font-size:14.5px;font-weight:700;line-height:1.3;flex:1}
+.kcard .w{font-weight:800;color:var(--kabaira);font-size:13px}
+.kcard .ref{margin-top:8px;font-size:12px;color:var(--gold2);opacity:.85}
+.kcard .why{margin-top:6px;font-size:12.5px;color:var(--mute);line-height:1.5}
+.kcard .tags{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+.safety{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:var(--r);border:1px solid rgba(60,207,145,.4);background:rgba(60,207,145,.07);margin:14px 0;font-size:13.5px;line-height:1.55}
+.safety b{color:#bff5dd}
+/* settings */
+.set{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{padding:11px 16px;border-radius:12px;border:1px solid var(--line);font-weight:700;font-size:13.5px;background:rgba(255,255,255,.03)}
+.btn.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1b1408;border:0}
+.btn.red{border-color:rgba(255,93,108,.5);color:#ffb3bb}
+.inp{background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:12px;padding:11px 14px;outline:none;font-size:15px;letter-spacing:4px;width:150px}
+.small{font-size:12.5px;color:var(--mute);line-height:1.55}
+.set h3{font-size:15px;margin-bottom:4px}
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(2,8,6,.75);backdrop-filter:blur(6px);display:grid;place-items:center;z-index:50;padding:18px;animation:fade .2s}
+.modal{max-width:460px;width:100%;background:linear-gradient(160deg,#17302a,#0e211b);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:pop .25s cubic-bezier(.3,1.4,.5,1)}
+.modal h3{font-family:var(--fh);font-size:26px;margin-bottom:8px}
+.modal p{font-size:14px;line-height:1.6;color:var(--mute)}
+.modal .ref{color:var(--gold2);font-size:13px;margin:10px 0}
+.modal .row{margin-top:16px;justify-content:flex-end}
+@keyframes fade{from{opacity:0}}
+@keyframes pop{from{transform:scale(.92);opacity:0}}
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--gold);color:#1b1408;font-weight:700;font-size:13px;padding:10px 16px;border-radius:999px;z-index:60;animation:pop .2s}
+.lock{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;padding:20px;
+  background-image:radial-gradient(ellipse 70% 50% at 50% 30%,rgba(217,180,106,.2),transparent 70%)}
+.lock .box{text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
+.lock .inp{text-align:center;width:200px}
+.spark{animation:spark .5s}
+@keyframes spark{50%{transform:scale(1.04)}}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<nav class="tabs"><div class="tabbar" id="tabbar"></div></nav>
+<div id="layer"></div>
+
+<script>
+/* ============ i18n ============ */
+const T={
+en:{intro:"Your private nightly Muhasabah — tap what you did today. A human estimate to raise awareness, not Allah's reckoning.",results:"Today's result",src:"Source",islahN:"“Good deeds wipe out bad deeds” (11:114). These big deeds help repair your record — but they never replace returning a person's right or asking their pardon.",seeIslah:"See repair deeds ↓",est:"<b>⚖️ A human estimate — not Allah's reckoning.</b> These points are a human approximation, made only to raise awareness of the obligations (wajibat), the major sins (kaba'ir) and the rights of people. The true weight of every deed, its intention, its acceptance and its forgiveness are known to Allah alone — and His mercy is greater than any score. This is not a fatwa; ask qualified scholars for rulings.",app:"Hasanat Score",tag:"Muhasabah · Islah fi al-Ardh",today:"Today",mizan:"Mizan",kabair:"Kaba'ir",settings:"Settings",
+all:"All",net:"Net score",good:"Hasanat",bad:"Weight of sins",oblig:"Obligations",owed:"Repairs owed",pts:"pts",
+tiers:{wajib:["Wajib","Obligations — the foundation"],hasanat:["Hasanat","Good character & eco-deeds"],saghaira:["Saghaira","Minor slips — erase them with good"],kabaira:["Kaba'ir","Heavy harms & violated rights"],islah:["Islah","Repair deeds — follow a sin with a good deed"]},
+pillars:{s:"Spiritual Core",f:"Family Justice",w:"Workplace Integrity",e:"Earth & Animals"},
+hr:"Right of others",
+v:{empty:"Begin your Muhasabah — tap what you did today, honestly.",heavy:"A heavy day. Repair it before you sleep: tawbah tonight, and return any right you owe.",wajib:"Your obligations are not complete yet.",bright:"A bright day — Alhamdulillah. Keep it sincere and hidden.",steady:"Steady. One more good deed can tip the scale.",low:"The scale leans the wrong way. Follow a bad deed with a good one — it wipes it out."},
+muflis:"“The truly bankrupt of my Ummah is one who comes on the Day of Judgement with prayer, fasting and zakat — yet had insulted this one, slandered that one, consumed this one's wealth and struck that one. Each is given from his good deeds…”",
+muflisSrc:"Sahih Muslim 2581 — prayer without justice to people is not enough.",
+recT:"Record honestly",recB:"Only Allah weighs deeds. Writing this down is the first step of tawbah: stop, regret, resolve never to return — and if someone was wronged, restore their right or seek their pardon.",rec:"Record it",cancel:"Cancel",
+tawbah:"Sincere tawbah",restored:"Right restored / pardon sought",repairT:"Repair before you sleep",
+note:"Tonight's reflection",noteP:"What will I correct tomorrow? Whose right do I still owe?",
+last14:"Last 14 days",streak:"Prayer streak",days:"days",avg:"14-day average",clean:"Days free of kaba'ir",pillarH:"Pillars — last 14 days",
+kIntro:"Lights on the major sins — especially those that wound other people. A prayer mat cannot cover a wronged wife, a beaten child, an unpaid worker or a poisoned river.",
+stepsT:"The four steps of tawbah",steps:["Stop the sin now","Regret it sincerely","Resolve never to return","Restore the right — return, repay, apologise"],
+safety:"<b>If you or anyone at home is in danger, call 999 (UAE) or your local emergency number.</b> If you are the one being harmed, it is not your fault — reach out to the police, a doctor or someone you trust.",
+lang:"Language",lockT:"Privacy lock",lockN:"A PIN screen-lock on this device. It hides the app from others who pick up your phone.",setPin:"Set PIN",rmPin:"Remove PIN",pinPh:"4–8 digits",
+backT:"Backup",backN:"Your data never leaves this device. Copy a backup and keep it somewhere safe, or paste one to restore.",copy:"Copy backup",restore:"Restore",pastePh:"Paste a backup here…",file:"Load file",
+eraseT:"Erase everything",eraseN:"Removes every record from this device.",erase:"Erase all data",sure:"Erase everything? This cannot be undone.",yes:"Yes, erase",
+copied:"Backup copied",restoredOk:"Backup restored",invalid:"That backup is not valid",pinSet:"PIN set",pinOff:"PIN removed",erased:"All data erased",
+enter:"Enter your PIN",unlock:"Unlock",wrong:"Wrong PIN",
+privacy:"<b>100% private.</b> Everything stays on this device — no account, no server, no tracking.",
+disc:"A mirror for self-reflection, not a verdict. Only Allah judges, and His mercy is greater than any scale.",
+introT:"Welcome to Hasanat Score",introB:"A nightly Muhasabah that weighs your prayers together with how you treated your family, your colleagues, workers, animals and the earth. Nothing you enter leaves this device.",begin:"Begin",
+todayLbl:"Today",yesterday:"Yesterday",ofN:"of"},
+ar:{intro:"محاسبتك الليلية الخاصة — اضغط على ما فعلته اليوم. تقدير بشري للتوعية، وليس حساب الله.",results:"نتيجة اليوم",src:"المصدر",islahN:"﴿إِنَّ الْحَسَنَاتِ يُذْهِبْنَ السَّيِّئَاتِ﴾ (هود 114). هذه الأعمال الكبيرة تُصلح سجلّك — لكنها لا تُغني أبدًا عن ردّ الحق لصاحبه أو استحلاله.",seeIslah:"أعمال الإصلاح ↓",est:"<b>⚖️ تقدير بشري — وليس حساب الله.</b> هذه النقاط تقدير بشري تقريبي، غايته التوعية بالواجبات والكبائر وحقوق العباد فقط. أما الوزن الحقيقي لكل عمل ونيّته وقبوله ومغفرته فعلمه عند الله وحده — ورحمته أوسع من أي رصيد. هذا ليس فتوى؛ ارجع إلى أهل العلم في الأحكام.",app:"سجلّ الحسنات",tag:"محاسبة النفس · إصلاح في الأرض",today:"اليوم",mizan:"الميزان",kabair:"الكبائر",settings:"الإعدادات",
+all:"الكل",net:"الرصيد الصافي",good:"الحسنات",bad:"ثقل السيئات",oblig:"الفرائض",owed:"إصلاحات معلّقة",pts:"ن",
+tiers:{wajib:["الواجبات","الفرائض — الأساس"],hasanat:["الحسنات","حسن الخلق وأعمال البيئة"],saghaira:["الصغائر","هفوات — أتبعها بالحسنة تمحُها"],kabaira:["الكبائر","المظالم الثقيلة وحقوق العباد"],islah:["الإصلاح","أعمال تُتبع بها السيئة فتمحوها"]},
+pillars:{s:"الجوهر الروحي",f:"العدل في الأسرة",w:"النزاهة في العمل",e:"الأرض والحيوان"},
+hr:"حق العباد",
+v:{empty:"ابدأ محاسبتك — اضغط على ما فعلته اليوم بصدق.",heavy:"يوم ثقيل. أصلحه قبل أن تنام: توبة الليلة، وردّ كل حق عليك.",wajib:"فرائضك لم تكتمل بعد.",bright:"يوم مضيء — الحمد لله. أخلص النية واستر عملك.",steady:"ثابت. حسنة واحدة قد ترجّح الكفّة.",low:"الميزان يميل للجهة الخطأ. أتبع السيئة الحسنة تمحُها."},
+muflis:"«أتدرون ما المفلس؟ إنّ المفلس من أمتي يأتي يوم القيامة بصلاة وصيام وزكاة، ويأتي قد شتم هذا، وقذف هذا، وأكل مال هذا، وسفك دم هذا، وضرب هذا، فيُعطى هذا من حسناته وهذا من حسناته…»",
+muflisSrc:"صحيح مسلم 2581 — الصلاة بلا عدل مع الناس لا تكفي.",
+recT:"سجّل بصدق",recB:"الله وحده يزن الأعمال. تسجيل هذا هو أول خطوة في التوبة: الإقلاع، والندم، والعزم على عدم العودة — وإن ظُلم أحد فردّ حقه أو استحلّه.",rec:"سجّل",cancel:"إلغاء",
+tawbah:"توبة صادقة",restored:"رددت الحق / استحللت صاحبه",repairT:"أصلح قبل أن تنام",
+note:"تأمّل الليلة",noteP:"ماذا سأصلح غدًا؟ ولمن عليّ حقّ لم أردّه؟",
+last14:"آخر 14 يومًا",streak:"تتابع الصلوات",days:"أيام",avg:"متوسط 14 يومًا",clean:"أيام خالية من الكبائر",pillarH:"الركائز — آخر 14 يومًا",
+kIntro:"تسليط الضوء على الكبائر — وخاصة ما يجرح الناس. سجادة الصلاة لا تغطّي زوجة مظلومة، ولا طفلًا مضروبًا، ولا عاملًا لم يُعطَ أجره، ولا نهرًا مسمومًا.",
+stepsT:"خطوات التوبة الأربع",steps:["الإقلاع عن الذنب الآن","الندم الصادق","العزم على عدم العودة","ردّ الحق — إرجاعًا أو سدادًا أو اعتذارًا"],
+safety:"<b>إن كنت أنت أو أحد في بيتك في خطر، اتصل بـ 999 (الإمارات) أو رقم الطوارئ المحلي.</b> إن كنت أنت من يتعرّض للأذى، فليس ذنبك — تواصل مع الشرطة أو طبيب أو شخص تثق به.",
+lang:"اللغة",lockT:"قفل الخصوصية",lockN:"قفل برقم سري على هذا الجهاز، يخفي التطبيق عن غيرك إن أمسك هاتفك.",setPin:"تعيين الرمز",rmPin:"إزالة الرمز",pinPh:"4–8 أرقام",
+backT:"النسخ الاحتياطي",backN:"بياناتك لا تغادر هذا الجهاز. انسخ نسخة احتياطية واحفظها في مكان آمن، أو الصق نسخة لاستعادتها.",copy:"نسخ احتياطي",restore:"استعادة",pastePh:"الصق النسخة هنا…",file:"تحميل ملف",
+eraseT:"مسح كل شيء",eraseN:"يحذف كل السجلات من هذا الجهاز.",erase:"مسح كل البيانات",sure:"مسح كل شيء؟ لا يمكن التراجع.",yes:"نعم، امسح",
+copied:"تم النسخ",restoredOk:"تمت الاستعادة",invalid:"النسخة غير صالحة",pinSet:"تم تعيين الرمز",pinOff:"تمت إزالة الرمز",erased:"تم مسح البيانات",
+enter:"أدخل الرمز السري",unlock:"فتح",wrong:"رمز خاطئ",
+privacy:"<b>خصوصية 100٪.</b> كل شيء يبقى على هذا الجهاز — بلا حساب ولا خادم ولا تتبّع.",
+disc:"مرآة لمحاسبة النفس، لا حُكم. الله وحده يحاسب، ورحمته أوسع من كل ميزان.",
+introT:"أهلًا بك في سجلّ الحسنات",introB:"محاسبة ليلية تزن صلاتك مع معاملتك لأهلك وزملائك والعمال والحيوان والأرض. لا شيء مما تُدخله يغادر هذا الجهاز.",begin:"ابدأ",
+todayLbl:"اليوم",yesterday:"أمس",ofN:"من"},
+fr:{intro:"Votre Muhasaba privée du soir — touchez ce que vous avez fait aujourd'hui. Une estimation humaine pour sensibiliser, pas le jugement d'Allah.",results:"Résultat du jour",src:"Source",islahN:"« Les bonnes actions effacent les mauvaises » (11:114). Ces grandes actions réparent votre bilan — mais ne remplacent jamais la restitution d'un droit ou le pardon de la personne lésée.",seeIslah:"Voir les actes de réparation ↓",est:"<b>⚖️ Une estimation humaine — pas le jugement d'Allah.</b> Ces points sont une approximation humaine, destinée uniquement à sensibiliser aux obligations (wajibat), aux grands péchés (kaba'ir) et aux droits des gens. Le vrai poids de chaque acte, son intention, son acceptation et son pardon ne sont connus que d'Allah — et Sa miséricorde dépasse tout score. Ceci n'est pas une fatwa ; consultez des savants qualifiés.",app:"Hasanat Score",tag:"Muhasaba · Réforme sur la terre",today:"Aujourd'hui",mizan:"Mizan",kabair:"Kaba'ir",settings:"Réglages",
+all:"Tout",net:"Score net",good:"Hasanat",bad:"Poids des fautes",oblig:"Obligations",owed:"Réparations dues",pts:"pts",
+tiers:{wajib:["Wajib","Obligations — le socle"],hasanat:["Hasanat","Bon caractère & gestes écologiques"],saghaira:["Saghaira","Petites fautes — effacez-les par le bien"],kabaira:["Kaba'ir","Graves torts & droits violés"],islah:["Islah","Actes de réparation — faire suivre la faute d'un bien"]},
+pillars:{s:"Cœur spirituel",f:"Justice familiale",w:"Intégrité au travail",e:"Terre & animaux"},
+hr:"Droit d'autrui",
+v:{empty:"Commencez votre Muhasaba — touchez ce que vous avez fait aujourd'hui, honnêtement.",heavy:"Journée lourde. Réparez-la avant de dormir : repentir ce soir, et rendez tout droit dû.",wajib:"Vos obligations ne sont pas encore complètes.",bright:"Journée lumineuse — Alhamdulillah. Restez sincère et discret.",steady:"Stable. Une bonne action de plus peut faire pencher la balance.",low:"La balance penche du mauvais côté. Faites suivre la faute d'une bonne action : elle l'efface."},
+muflis:"« Le véritable failli de ma communauté est celui qui viendra au Jour du Jugement avec prière, jeûne et zakat — mais qui aura insulté l'un, calomnié l'autre, mangé les biens de celui-ci et frappé celui-là. Chacun recevra de ses bonnes œuvres… »",
+muflisSrc:"Sahih Muslim 2581 — la prière sans justice envers les gens ne suffit pas.",
+recT:"Enregistrer honnêtement",recB:"Seul Allah pèse les actes. L'écrire est le premier pas du repentir : cesser, regretter, ne jamais y revenir — et si quelqu'un a été lésé, lui rendre son droit ou demander son pardon.",rec:"Enregistrer",cancel:"Annuler",
+tawbah:"Repentir sincère",restored:"Droit rendu / pardon demandé",repairT:"Réparer avant de dormir",
+note:"Réflexion du soir",noteP:"Que vais-je corriger demain ? À qui dois-je encore un droit ?",
+last14:"14 derniers jours",streak:"Série de prières",days:"jours",avg:"Moyenne sur 14 jours",clean:"Jours sans kaba'ir",pillarH:"Piliers — 14 derniers jours",
+kIntro:"La lumière sur les grands péchés — surtout ceux qui blessent autrui. Un tapis de prière ne couvre pas une épouse lésée, un enfant frappé, un ouvrier impayé ni une rivière empoisonnée.",
+stepsT:"Les quatre étapes du repentir",steps:["Cesser le péché maintenant","Le regretter sincèrement","Résoudre de ne jamais y revenir","Rendre le droit — restituer, rembourser, s'excuser"],
+safety:"<b>Si vous ou quelqu'un chez vous êtes en danger, appelez le 999 (EAU) ou le numéro d'urgence local.</b> Si c'est vous qui subissez la violence, ce n'est pas votre faute — contactez la police, un médecin ou une personne de confiance.",
+lang:"Langue",lockT:"Verrou de confidentialité",lockN:"Un code PIN sur cet appareil, qui cache l'application à quiconque prend votre téléphone.",setPin:"Définir le PIN",rmPin:"Retirer le PIN",pinPh:"4 à 8 chiffres",
+backT:"Sauvegarde",backN:"Vos données ne quittent jamais cet appareil. Copiez une sauvegarde et gardez-la en lieu sûr, ou collez-en une pour restaurer.",copy:"Copier la sauvegarde",restore:"Restaurer",pastePh:"Collez une sauvegarde ici…",file:"Charger un fichier",
+eraseT:"Tout effacer",eraseN:"Supprime tous les enregistrements de cet appareil.",erase:"Effacer toutes les données",sure:"Tout effacer ? Action irréversible.",yes:"Oui, effacer",
+copied:"Sauvegarde copiée",restoredOk:"Sauvegarde restaurée",invalid:"Sauvegarde invalide",pinSet:"PIN défini",pinOff:"PIN retiré",erased:"Données effacées",
+enter:"Entrez votre PIN",unlock:"Déverrouiller",wrong:"PIN incorrect",
+privacy:"<b>100 % privé.</b> Tout reste sur cet appareil — pas de compte, pas de serveur, aucun suivi.",
+disc:"Un miroir pour l'introspection, pas un verdict. Seul Allah juge, et Sa miséricorde dépasse toute balance.",
+introT:"Bienvenue dans Hasanat Score",introB:"Une Muhasaba du soir qui pèse vos prières avec la façon dont vous avez traité votre famille, vos collègues, les travailleurs, les animaux et la terre. Rien de ce que vous saisissez ne quitte cet appareil.",begin:"Commencer",
+todayLbl:"Aujourd'hui",yesterday:"Hier",ofN:"sur"}
+};
+const PIC={s:"🕌",f:"🏡",w:"💼",e:"🌿"};
+const TIERS=["wajib","hasanat","saghaira","kabaira","islah"];
+const TCOL={wajib:"var(--wajib)",hasanat:"var(--hasanat)",saghaira:"var(--saghaira)",kabaira:"var(--kabaira)",islah:"var(--islah)"};
+
+/* ============ deeds: [id,pillar,tier,pts,humanRight,emoji,en,ar,fr,ref] ============ */
+const RAW=[
+// SPIRITUAL CORE
+["fajr","s","wajib",10,0,"🌅","Fajr prayer","صلاة الفجر","Prière du Fajr","2:238"],
+["dhuhr","s","wajib",10,0,"☀️","Dhuhr prayer","صلاة الظهر","Prière du Dhuhr","2:238"],
+["asr","s","wajib",10,0,"🌤️","Asr prayer","صلاة العصر","Prière du Asr","2:238"],
+["maghrib","s","wajib",10,0,"🌇","Maghrib prayer","صلاة المغرب","Prière du Maghrib","2:238"],
+["isha","s","wajib",10,0,"🌙","Isha prayer","صلاة العشاء","Prière du Isha","2:238"],
+["quran","s","hasanat",5,0,"📖","Read & reflected on Quran","تلاوة القرآن وتدبّره","Lecture et méditation du Coran","38:29"],
+["adhkar","s","hasanat",3,0,"📿","Morning & evening adhkar","أذكار الصباح والمساء","Adhkar du matin et du soir","33:41"],
+["sunnah","s","hasanat",3,0,"🤲","Sunnah prayers","السنن الرواتب","Prières surérogatoires","Muslim 728"],
+["qiyam","s","hasanat",5,0,"✨","Night prayer (qiyam)","قيام الليل","Prière de nuit (qiyam)","32:16"],
+["sadaqah","s","hasanat",5,0,"💝","Gave charity","تصدّقت","Donné une aumône","2:261"],
+["dua","s","hasanat",2,0,"🕊️","Du'a for others in secret","دعوت لغيري بظهر الغيب","Invocation secrète pour autrui","Muslim 2733"],
+["ilm","s","hasanat",3,0,"🎓","Learned something beneficial","تعلّمت علمًا نافعًا","Appris un savoir utile","20:114"],
+["fast","s","hasanat",10,0,"🌙","Fasted today (Ramadan, qada or voluntary)","صمت اليوم (رمضان أو قضاء أو تطوّع)","Jeûné aujourd'hui (Ramadan, rattrapage ou surérogatoire)","2:183"],
+["zakat","s","hasanat",10,0,"🪙","Paid zakat / zakat al-fitr due","أخرجت الزكاة أو زكاة الفطر المستحقة","Payé la zakat / zakat al-fitr due","2:43 · 9:103"],
+["latepr","s","saghaira",-3,0,"⏳","Delayed a prayer to its last minutes","أخّرت صلاة إلى آخر وقتها","Prière retardée à la dernière minute","107:4–5"],
+["laghw","s","saghaira",-2,0,"💬","Idle, useless talk","لغو وكلام لا يعني","Bavardage futile","23:3"],
+["gaze","s","saghaira",-3,0,"👁️","Did not lower my gaze","لم أغضّ بصري","N'ai pas baissé le regard","24:30–31"],
+["anger","s","saghaira",-3,0,"🔥","Lost my temper","غضبت ولم أملك نفسي","Me suis emporté(e)","Bukhari 6116"],
+["missp","s","kabaira",-60,0,"🚫","Leaving a prayer deliberately (or praying it out of its time)","ترك الصلاة عمدًا أو إخراجها عن وقتها","Délaisser volontairement une prière (ou hors de son temps)","Muslim 82"],
+["nozakat","s","kabaira",-90,1,"🔒","Withholding zakat that is due","منع الزكاة الواجبة","Retenir la zakat due","9:34–35 · Bukhari 1403"],
+["nofast","s","kabaira",-90,0,"🍽️","Breaking or skipping a Ramadan fast without excuse","الإفطار في رمضان أو ترك صومه بغير عذر","Rompre ou délaisser le jeûne de Ramadan sans excuse","2:183–185"],
+["zina","s","kabaira",-100,0,"⛔","Zina / illicit sexual relations (any gender)","الزنا والفواحش (أيًّا كان الطرف)","Zina / relations illicites (quel que soit le sexe)","17:32 · 7:80–81"],
+["porn","s","kabaira",-60,0,"📵","Watching or producing explicit / haram content","مشاهدة المحتوى الإباحي أو صناعته","Regarder ou produire du contenu explicite / illicite","24:30 · 24:19"],
+["sihr","s","kabaira",-90,0,"🔮","Doing or requesting magic, sorcery, or consulting fortune-tellers","عمل السحر أو طلبه أو إتيان العرّافين والكهّان","Pratiquer ou commander la magie, ou consulter des voyants","2:102 · Muslim 2230"],
+["drugs","s","kabaira",-80,0,"💊","Alcohol or drugs","الخمر أو المخدّرات","Alcool ou drogues","5:90–91"],
+["gamble","s","kabaira",-60,0,"🎲","Gambling / betting","القمار والميسر","Jeux d'argent / paris","5:90"],
+["lie","s","kabaira",-40,1,"🎭","Deliberate lying","الكذب المتعمّد","Mensonge délibéré","Bukhari 6094"],
+["qadhf","s","kabaira",-80,1,"🗡️","Slandering someone's honour","قذف المحصنات والطعن في الأعراض","Calomnier l'honneur d'autrui","24:4 · 24:23"],
+// FAMILY JUSTICE
+["parents","f","wajib",10,0,"👵","Kindness & contact with my parents","برّ الوالدين والتواصل معهما","Bonté et contact avec mes parents","17:23–24"],
+["provide","f","wajib",10,0,"🏠","Fulfilled my family's rights & needs","أدّيت حقوق أهلي ونفقتهم","Droits et besoins de ma famille assurés","2:233"],
+["kids","f","hasanat",5,0,"🧸","Quality time — listened to my children","وقت نوعي وإصغاء لأبنائي","Temps de qualité, écoute de mes enfants","Tirmidhi 1919"],
+["gentle","f","hasanat",5,0,"💞","Gentle, kind words with my spouse","كلمة طيبة ولين مع شريك حياتي","Paroles douces envers mon/ma conjoint(e)","Tirmidhi 3895"],
+["chores","f","hasanat",3,0,"🧺","Helped with housework","ساعدت في أعمال البيت","Aidé aux tâches ménagères","Bukhari 676"],
+["kin","f","hasanat",5,0,"📞","Visited or called relatives","وصلت رحمي بزيارة أو اتصال","Visite ou appel à la famille","Bukhari 5986"],
+["forgive","f","hasanat",5,0,"🤝","Forgave a family member","سامحت أحد أفراد أسرتي","Pardonné à un proche","24:22"],
+["helper","f","hasanat",3,0,"🙏","Thanked & respected our domestic helper","شكرت العاملة المنزلية واحترمتها","Remercié et respecté l'aide à domicile","Bukhari 30"],
+["shout","f","saghaira",-5,0,"📢","Raised my voice at home","رفعت صوتي في البيت","Élevé la voix à la maison","31:19"],
+["phone","f","saghaira",-2,0,"📱","Chose my phone over family time","انشغلت بالهاتف عن أهلي","Téléphone au lieu de la famille",""],
+["mock","f","saghaira",-3,0,"😏","Sarcasm or belittling a family member","سخرية أو تحقير لأحد أهلي","Sarcasme ou rabaisser un proche","49:11"],
+["impat","f","saghaira",-3,0,"😤","Impatient with children or elders","ضجرت من الأطفال أو كبار السن","Impatience envers enfants ou aînés","17:23"],
+["earn","f","hasanat",5,0,"💪","Earned by my own effort / studied seriously","كسبت من عمل يدي أو اجتهدت في دراستي","Gagné par mon effort / étudié sérieusement","Bukhari 2072"],
+["budget","f","hasanat",3,0,"🐷","Saved money & respected my family's budget","ادّخرت واحترمت ميزانية أهلي","Économisé et respecté le budget familial","25:67"],
+["wasteday","f","saghaira",-5,0,"☕","Wasted the whole day — cafés, gaming, scrolling","أضعت يومي كله — مقاهٍ وألعاب وتصفّح","Journée gaspillée — cafés, jeux, scroll","Tirmidhi 2417 · 103:1–3"],
+["showoff","f","saghaira",-5,0,"🛍️","Spent money I didn't earn on outings to impress friends","أنفقت مالًا لم أتعب فيه على النزهات والتباهي أمام الأصدقاء","Dépensé un argent non gagné en sorties pour impressionner mes amis","17:29"],
+["idlelive","f","kabaira",-50,1,"🛋️","Able to work, but living off my parents or spouse","قادر على العمل وأعيش عالة على والديّ أو شريك حياتي","Capable de travailler, mais vivre aux dépens de mes parents ou conjoint","Bukhari 1471"],
+["tabdhir","f","kabaira",-40,1,"💸","Squandering (tabdhir) — draining family money on luxuries & show","التبذير — استنزاف مال الأهل في الكماليات والمظاهر","Gaspillage (tabdhir) — vider l'argent familial en luxe et apparences","17:26–27"],
+["uquq","f","kabaira",-90,1,"💔","Mistreating or disrespecting parents","عقوق الوالدين","Maltraiter ou manquer de respect aux parents","17:23 · Bukhari 5976"],
+["spouse","f","kabaira",-100,1,"🛑","Hitting, abusing or terrorising my spouse","ضرب شريك الحياة أو إيذاؤه أو ترهيبه","Frapper, maltraiter ou terroriser mon/ma conjoint(e)","30:21 · 4:19"],
+["child","f","kabaira",-100,1,"🧒","Hitting, abusing or harassing a child","ضرب طفل أو إيذاؤه أو التحرّش به","Frapper, maltraiter ou harceler un enfant","Tirmidhi 1919"],
+["servant","f","kabaira",-100,1,"🧹","Abusing, insulting or exploiting domestic workers","إيذاء العمالة المنزلية أو إهانتها أو استغلالها","Maltraiter, insulter ou exploiter le personnel de maison","Bukhari 30 · Muslim 1657"],
+["rahim","f","kabaira",-70,1,"✂️","Cutting family ties","قطيعة الرحم","Rompre les liens familiaux","47:22–23"],
+["orphan","f","kabaira",-90,1,"⚖️","Consuming an orphan's or heir's share","أكل مال اليتيم أو حرمان الورثة","Spolier un orphelin ou un héritier","4:10 · 4:11"],
+// WORKPLACE INTEGRITY
+["honest","w","wajib",10,0,"🧭","Did my job honestly & on time","أدّيت عملي بأمانة وفي وقته","Travail fait honnêtement et à temps","4:58"],
+["wages","w","wajib",10,0,"💵","Paid wages & dues on time","أعطيت الأجور والمستحقات في وقتها","Salaires et dus versés à temps","Ibn Majah 2443"],
+["helpc","w","hasanat",3,0,"🤲","Helped a colleague","ساعدت زميلًا","Aidé un collègue","5:2"],
+["fair","w","hasanat",5,0,"⚖️","A fair decision — no favouritism","قرار عادل دون محاباة","Décision juste, sans favoritisme","4:135"],
+["mentor","w","hasanat",5,0,"🌱","Mentored or taught someone","درّبت أو علّمت أحدًا","Encadré ou formé quelqu'un","Muslim 1631"],
+["truth","w","hasanat",3,0,"📝","Reported truthfully, even against myself","صدقت في التقرير ولو على نفسي","Rapport honnête, même contre moi","4:135"],
+["smile","w","hasanat",2,0,"😊","Kind & smiling with staff and cleaners","لطفت وتبسّمت مع الموظفين وعمّال النظافة","Gentil et souriant avec le personnel","Tirmidhi 1956"],
+["serve","w","hasanat",5,0,"📨","Finished someone's request quickly & kindly","أنجزت معاملة أحدهم بسرعة ولطف","Traité vite et aimablement la demande de quelqu'un","Muslim 2699"],
+["patient","w","hasanat",5,0,"❤️‍🩹","Treated a patient or client with patience & dignity","عاملت مريضًا أو مراجعًا بصبر وكرامة","Traité un patient ou usager avec patience et dignité","5:32"],
+["report","w","hasanat",5,0,"🛡️","Refused or reported corruption","رفضت الفساد أو بلّغت عنه","Refusé ou signalé la corruption","Muslim 49"],
+["late","w","saghaira",-2,0,"⏰","Late or wasted work time","تأخّرت أو أضعت وقت العمل","Retard ou temps de travail gaspillé","83:1–3"],
+["gossip","w","saghaira",-3,0,"🗣️","Joined gossip","شاركت في القيل والقال","Participé aux commérages","Bukhari 1477"],
+["misuse","w","saghaira",-3,0,"🖨️","Used company resources for myself","استعملت موارد العمل لنفسي","Usage personnel des ressources","8:27"],
+["promise","w","saghaira",-3,0,"🤞","Exaggerated or broke a small promise","بالغت أو أخلفت وعدًا صغيرًا","Exagéré ou petite promesse non tenue","17:34"],
+["namima","w","kabaira",-70,1,"🐍","Namima — carrying tales to cause discord","النميمة والإفساد بين الناس","Namima — colporter pour semer la discorde","68:11 · Bukhari 6056"],
+["ghiba","w","kabaira",-50,1,"🥀","Backbiting (ghiba)","الغيبة","Médisance (ghiba)","49:12"],
+["bribe","w","kabaira",-80,1,"🤝","Giving or taking a bribe","الرشوة أخذًا أو إعطاءً","Donner ou recevoir un pot-de-vin","2:188 · Abu Dawud 3580"],
+["theft","w","kabaira",-80,1,"🦹","Theft, embezzlement or fraud","السرقة أو الاختلاس أو الغش","Vol, détournement ou fraude","5:38 · Muslim 101"],
+["withhold","w","kabaira",-90,1,"🧾","Withholding or cutting a worker's wage","أكل أجر الأجير أو بخسه","Retenir ou réduire le salaire d'un travailleur","Bukhari 2227"],
+["harass","w","kabaira",-100,1,"🚷","Sexual harassment","التحرّش","Harcèlement sexuel","33:58"],
+["bully","w","kabaira",-80,1,"👊","Bullying or abusing power over staff","التنمّر أو التسلّط على المرؤوسين","Intimidation ou abus de pouvoir","Muslim 2577"],
+["zur","w","kabaira",-90,1,"📜","False testimony or false oath","شهادة الزور واليمين الغموس","Faux témoignage ou faux serment","Bukhari 2654"],
+["delay","w","kabaira",-60,1,"🐌","Delaying people's work or transactions on purpose","تعطيل مصالح الناس وتأخير معاملاتهم عمدًا","Retarder délibérément les démarches des gens","Muslim 1828"],
+["wasta","w","kabaira",-70,1,"🫂","Favouring relatives or friends (wasta) over the deserving","المحاباة والواسطة للأقارب والأصدقاء على حساب المستحق","Favoriser proches ou amis (piston) au détriment des méritants","4:58 · Bukhari 6496"],
+["slack","w","kabaira",-60,1,"🎮","Paid but not doing my duty — playing, absent, idle","آخذ راتبي ولا أؤدي واجبي — لهو أو غياب أو تسيّب","Payé sans faire mon devoir — jeu, absence, oisiveté","8:27 · 83:1–3"],
+["mislead","w","kabaira",-70,1,"🎣","Misleading or cheating customers","خداع العملاء أو غشّهم","Tromper ou induire en erreur les clients","Muslim 102 · Bukhari 2079"],
+["forge","w","kabaira",-80,1,"🖋️","Forging documents, signatures or official records","تزوير المستندات أو التواقيع أو السجلات الرسمية","Falsifier documents, signatures ou registres officiels","Bukhari 2654"],
+["ghulul","w","kabaira",-90,1,"🏛️","Misusing public funds or office for personal gain","استغلال المال العام أو المنصب لمصلحة شخصية","Détourner fonds publics ou fonction à des fins personnelles","3:161 · Bukhari 7174"],
+["tender","w","kabaira",-80,1,"📑","Rigging tenders, contracts or hiring","التلاعب في المناقصات أو العقود أو التوظيف","Truquer appels d'offres, contrats ou recrutements","2:188"],
+["gifts","w","kabaira",-60,1,"🎁","Accepting 'gifts' or kickbacks because of my position","قبول الهدايا أو العمولات بسبب منصبي","Accepter « cadeaux » ou commissions grâce à ma fonction","Bukhari 7174"],
+["medfraud","w","kabaira",-90,1,"🩺","Unneeded tests, procedures or drugs for profit","فحوصات أو عمليات أو أدوية غير لازمة من أجل الربح","Examens, actes ou médicaments inutiles par appât du gain","Muslim 102"],
+["neglect","w","kabaira",-100,1,"🚑","Neglecting a patient or practising beyond my competence","إهمال مريض أو ممارسة الطب بغير كفاءة","Négliger un patient ou exercer sans compétence","Abu Dawud 4586"],
+["pharma","w","kabaira",-70,1,"💉","Kickbacks from pharma / labs for prescribing","عمولات من شركات الأدوية أو المختبرات مقابل الوصفات","Commissions de laboratoires pour prescrire","2:188 · Bukhari 7174"],
+["sicknote","w","kabaira",-60,1,"📄","Issuing or using false medical reports / sick notes","إصدار أو استخدام تقارير طبية أو إجازات مرضية مزوّرة","Faux certificats médicaux ou arrêts maladie","Bukhari 2654"],
+["secret","w","kabaira",-60,1,"🔓","Exposing patients' or clients' private information","إفشاء أسرار المرضى أو العملاء","Divulguer les secrets des patients ou clients","4:58 · Bukhari 2442"],
+["discrim","w","kabaira",-70,1,"🚪","Treating people worse for wealth, nationality or status","التمييز في المعاملة بسبب المال أو الجنسية أو المكانة","Discriminer selon la richesse, la nationalité ou le statut","49:13"],
+["riba","w","kabaira",-80,0,"📈","Dealing in riba (usury)","التعامل بالربا","Pratiquer l'usure (riba)","2:275–279"],
+// EARTH & ANIMALS
+["bins","e","wajib",10,0,"🗑️","Disposed of waste properly — no littering","تخلّصت من النفايات كما يجب","Déchets jetés correctement","7:56"],
+["pets","e","wajib",10,0,"🐾","Fed & cared for animals in my care","أطعمت الحيوانات التي في رعايتي","Nourri les animaux à ma charge","Abu Dawud 2548"],
+["tree","e","hasanat",5,0,"🌳","Planted or watered a tree","غرست أو سقيت شجرة","Planté ou arrosé un arbre","Bukhari 2320"],
+["feed","e","hasanat",5,0,"🐈","Fed or gave water to a stray animal","أطعمت حيوانًا أو سقيته","Nourri ou abreuvé un animal errant","Bukhari 2363"],
+["recycle","e","hasanat",3,0,"♻️","Recycled or reused","أعدت التدوير أو الاستعمال","Recyclé ou réutilisé","7:31"],
+["water","e","hasanat",3,0,"💧","Saved water — even at wudu","اقتصدت في الماء ولو في الوضوء","Économisé l'eau, même aux ablutions","7:31"],
+["path","e","hasanat",5,0,"🛤️","Removed harm from a path","أمطت الأذى عن الطريق","Retiré un obstacle du chemin","Muslim 35"],
+["green","e","hasanat",3,0,"🚶","Walked, carpooled or took transit","مشيت أو شاركت السيارة أو ركبت النقل العام","Marche, covoiturage ou transports","30:41"],
+["cleanfood","e","hasanat",5,0,"🥕","Grew, sold or chose clean, honest food","زرعت أو بعت أو اخترت غذاءً نظيفًا صادقًا","Cultivé, vendu ou choisi une nourriture saine et honnête","2:168"],
+["lights","e","saghaira",-2,0,"💡","Left lights / AC running needlessly","تركت الإنارة أو المكيّف دون حاجة","Lumières / clim laissées inutilement","17:27"],
+["food","e","saghaira",-3,0,"🍽️","Wasted food","أهدرت طعامًا","Gaspillé de la nourriture","7:31"],
+["plastic","e","saghaira",-1,0,"🥤","Needless single-use plastic","بلاستيك لمرة واحدة دون حاجة","Plastique jetable inutile","30:41"],
+["idle","e","saghaira",-2,0,"🚗","Engine idling or needless driving","تشغيل المحرك أو القيادة دون حاجة","Moteur au ralenti ou trajets inutiles","30:41"],
+["pollute","e","kabaira",-70,1,"🏭","Dumping waste or pollution into water, land or air","رمي المخلفات أو تلويث الماء والأرض والهواء","Rejeter déchets ou pollution dans l'eau, le sol ou l'air","7:56 · Muslim 269"],
+["cruel","e","kabaira",-90,0,"🐕","Cruelty to an animal","تعذيب حيوان أو القسوة عليه","Cruauté envers un animal","Bukhari 3318"],
+["hunt","e","kabaira",-60,0,"🏹","Killing animals for sport / poaching","قتل الحيوان عبثًا أو الصيد الجائر","Tuer des animaux par jeu / braconnage","Nasa'i — the sparrow hadith"],
+["chem","e","kabaira",-90,1,"🧪","Spraying banned or excess chemicals on crops to make them look better or bigger","رشّ المحاصيل بمواد كيميائية محظورة أو زائدة لتبدو أجمل أو أكبر","Traiter les cultures avec des produits interdits ou excessifs pour les embellir ou les grossir","Ibn Majah 2340 · 2:205"],
+["phi","e","kabaira",-80,1,"⏱️","Harvesting or selling before the pesticide safety period ends","الحصاد أو البيع قبل انتهاء فترة أمان المبيدات","Récolter ou vendre avant la fin du délai de sécurité des pesticides","Ibn Majah 2340"],
+["hormone","e","kabaira",-90,1,"🐔","Injecting hormones or misusing antibiotics in poultry & livestock","حقن الدواجن والمواشي بالهرمونات أو إساءة استخدام المضادات الحيوية","Injecter des hormones ou abuser des antibiotiques chez volailles et bétail","Ibn Majah 2340 · Muslim 102"],
+["badfood","e","kabaira",-90,1,"🍎","Selling spoiled, expired, contaminated or disguised food","بيع طعام فاسد أو منتهي الصلاحية أو ملوّث أو مغشوش","Vendre des aliments avariés, périmés, contaminés ou maquillés","Muslim 102"],
+["farmcruel","e","kabaira",-70,1,"🐄","Overcrowding, starving or mistreating farm animals for profit","حشر حيوانات المزرعة أو تجويعها أو إيذاؤها طلبًا للربح","Entasser, affamer ou maltraiter les animaux d'élevage par profit","Bukhari 3318 · Abu Dawud 2548"],
+["destroy","e","kabaira",-60,1,"🪓","Destroying trees, nature or public property","إتلاف الشجر والطبيعة والممتلكات العامة","Détruire arbres, nature ou biens publics","2:205"],
+// ISLAH — repair deeds
+["qada","s","islah",20,0,"🕰️","Made up missed prayers (qada)","قضيت صلوات فائتة","Rattrapé des prières manquées (qada)","20:14"],
+["qadafast","s","islah",20,0,"🌙","Made up missed fasts","قضيت أيامًا فائتة من الصيام","Rattrapé des jeûnes manqués","2:184"],
+["latezakat","s","islah",40,0,"🪙","Paid overdue zakat","أخرجت زكاة متأخرة","Payé une zakat en retard","9:103"],
+["feed10","s","islah",40,0,"🍲","Fed or clothed 10 poor people (kaffarah)","أطعمت أو كسوت عشرة مساكين (كفّارة)","Nourri ou vêtu 10 pauvres (kaffara)","5:89"],
+["iftar","s","islah",15,0,"🥘","Gave iftar to fasting people","فطّرت صائمين","Offert l'iftar à des jeûneurs","Tirmidhi 807"],
+["teach","s","islah",20,0,"📚","Taught Quran or beneficial knowledge","علّمت القرآن أو علمًا نافعًا","Enseigné le Coran ou un savoir utile","Bukhari 5027"],
+["mosque","s","islah",50,0,"🕌","Built or repaired part of a mosque","بنيت أو رمّمت جزءًا من مسجد","Construit ou réparé une partie de mosquée","Bukhari 450"],
+["reconcile","f","islah",40,0,"🤝","Reconciled with an estranged relative","أصلحت ما بيني وبين قريب مقاطَع","Réconcilié avec un parent éloigné","49:10 · Bukhari 5986"],
+["helpkin","f","islah",25,0,"🎀","Helped a relative in need (money, time, care)","ساعدت قريبًا محتاجًا بمال أو وقت أو رعاية","Aidé un parent dans le besoin (argent, temps, soins)","2:177"],
+["checkkin","f","islah",15,0,"☎️","Regularly checked on an elderly or lonely relative","تفقّدت قريبًا مسنًّا أو وحيدًا بانتظام","Pris régulièrement des nouvelles d'un proche âgé ou seul","4:36"],
+["sponsor","f","islah",60,0,"🧒","Sponsored or cared for an orphan","كفلت يتيمًا أو رعيته","Parrainé ou pris en charge un orphelin","Bukhari 5304"],
+["apology","f","islah",30,0,"🕊️","Apologised sincerely to someone I wronged","اعتذرت بصدق لمن ظلمته","Présenté de sincères excuses à une personne lésée","Bukhari 2449"],
+["parentsdua","f","islah",15,0,"🤲","Charity or du'a on behalf of my parents","تصدّقت أو دعوت عن والديّ","Aumône ou invocation pour mes parents","17:24 · Muslim 1631"],
+["business","w","islah",60,0,"🛒","Helped someone start a small business","ساعدت أحدهم على بدء مشروع صغير","Aidé quelqu'un à lancer une petite activité","Abu Dawud 1641"],
+["help10","w","islah",40,0,"👐","Helped 10 needy people","ساعدت عشرة محتاجين","Aidé 10 personnes dans le besoin","2:274"],
+["debt","w","islah",50,0,"🧾","Paid off or forgave someone's debt","سددت دين أحدهم أو أسقطته عنه","Payé ou annulé la dette de quelqu'un","2:280 · Muslim 1563"],
+["returngain","w","islah",60,0,"↩️","Returned unfair gains to their owners or the public","رددت المكاسب غير المشروعة لأصحابها أو للمال العام","Rendu des gains injustes à leurs propriétaires ou au public","Bukhari 2449"],
+["jobhelp","w","islah",25,0,"🎯","Helped someone find a job or training","ساعدت أحدهم في إيجاد عمل أو تدريب","Aidé quelqu'un à trouver un emploi ou une formation","Muslim 2699"],
+["tuition","w","islah",40,0,"🎓","Paid a student's school or university fees","دفعت رسوم دراسة طالب","Payé les frais de scolarité d'un étudiant","Muslim 1631"],
+["trees10","e","islah",50,0,"🌴","Planted 10 trees (olive, date palm, ghaf, pine…)","غرست عشر أشجار (زيتون، نخيل، غاف، صنوبر…)","Planté 10 arbres (olivier, palmier, ghaf, pin…)","Bukhari 2320"],
+["road","e","islah",30,0,"🛣️","Fixed part of a road or removed a hazard","أصلحت جزءًا من طريق أو أزلت خطرًا","Réparé une partie de route ou supprimé un danger","Muslim 1914"],
+["school","e","islah",50,0,"🏫","Repaired a school or hospital room / equipment","رمّمت غرفة أو أجهزة في مدرسة أو مستشفى","Réparé une salle ou un équipement d'école ou d'hôpital","Muslim 1631"],
+["medequip","e","islah",40,0,"♿","Donated medical equipment (wheelchair, devices, medicine)","تبرّعت بمعدّات طبية (كرسي متحرك، أجهزة، أدوية)","Donné du matériel médical (fauteuil, appareils, médicaments)","5:32"],
+["well","e","islah",50,0,"🚰","Provided a well or public water cooler (sabil)","وفّرت بئرًا أو برّادة ماء للسبيل","Offert un puits ou une fontaine publique (sabil)","Abu Dawud 1681"],
+["cleanup","e","islah",20,0,"🏖️","Cleaned a beach, park or wadi","نظّفت شاطئًا أو حديقة أو واديًا","Nettoyé une plage, un parc ou un oued","Muslim 35"],
+["rescue","e","islah",20,0,"🐕","Rescued, adopted or treated an animal","أنقذت حيوانًا أو تبنّيته أو عالجته","Sauvé, adopté ou soigné un animal","Bukhari 2363"],
+["birdwater","e","islah",15,0,"🐦","Set up water & food for birds and strays","وضعت ماءً وطعامًا للطيور والحيوانات الضالة","Installé eau et nourriture pour oiseaux et errants","Bukhari 2363"],
+["solar","e","islah",20,0,"☀️","Installed water- or energy-saving fixtures","ركّبت أدوات لتوفير الماء أو الطاقة","Installé des dispositifs d'économie d'eau ou d'énergie","7:31"]
+];
+const ITEMS=RAW.map(r=>({id:r[0],p:r[1],t:r[2],pts:r[3],h:!!r[4],em:r[5],n:{en:r[6],ar:r[7],fr:r[8]},ref:r[9]}));
+const BY=Object.fromEntries(ITEMS.map(i=>[i.id,i]));
+const WAJIB=ITEMS.filter(i=>i.t==="wajib");
+const PRAYERS=["fajr","dhuhr","asr","maghrib","isha"];
+
+/* ============ state ============ */
+const KEY="hasanat-score-v1";
+let S={lang:"en",days:{},pin:null,intro:false};
+let mem=true;
+try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){mem=false}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+let view=(location.hash||"").slice(1)||"today";
+if(!["today","mizan","kabair","settings"].includes(view))view="today";
+let filter="all";
+let cur=dkey(new Date());
+let unlocked=!S.pin;
+
+function dkey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function dparse(k){const[a,b,c]=k.split("-").map(Number);return new Date(a,b-1,c)}
+function shift(k,n){const d=dparse(k);d.setDate(d.getDate()+n);return dkey(d)}
+function day(k){return S.days[k]||{c:{},r:{},note:""}}
+function ensure(k){if(!S.days[k])S.days[k]={c:{},r:{},note:""};return S.days[k]}
+const L=()=>T[S.lang];
+const nm=i=>i.n[S.lang];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=n=>{const s=(n>0?"+":"")+n;return S.lang==="ar"?'<bdi dir="ltr">'+s+"</bdi>":s};
+const num=n=>String(n);
+
+function resolved(d,id){const it=BY[id],r=d.r[id]||{};return r.t&&(!it.h||r.x)}
+function score(k){
+  const d=day(k);let good=0,bad=0,wj=0,kab=0,open=0;const per={s:[0,0],f:[0,0],w:[0,0],e:[0,0]};
+  for(const id in d.c){const it=BY[id],n=d.c[id];if(!it||!n)continue;
+    if(it.t==="wajib"||it.t==="hasanat"||it.t==="islah"){good+=it.pts*n;per[it.p][0]+=it.pts*n;if(it.t==="wajib")wj++}
+    else if(it.t==="saghaira"){bad+=-it.pts*n;per[it.p][1]+=-it.pts*n}
+    else{kab+=n;if(!resolved(d,id)){bad+=-it.pts*n;per[it.p][1]+=-it.pts*n;open++}}}
+  const prayers=PRAYERS.filter(p=>d.c[p]).length;
+  return{good,bad,net:good-bad,wj,kab,open,per,prayers,any:Object.values(d.c).some(v=>v>0)};
+}
+
+/* ============ render ============ */
+const ICON={
+today:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>',
+mizan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM8 21h8"/></svg>',
+kabair:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5-6.5 4.5 2-7.5L2 9h7z"/></svg>',
+settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>',
+lock:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+quote:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 7H6a3 3 0 0 0-3 3v4h4v4l3-4zM21 7h-4a3 3 0 0 0-3 3v4h4v4l3-4z" opacity=".85"/></svg>'
+};
+const LOGO=`<svg class="logo" viewBox="0 0 48 48"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1d79c"/><stop offset="1" stop-color="#b8893e"/></linearGradient></defs>
+<path d="M24 2l6 9 10-2-2 10 9 5-9 5 2 10-10-2-6 9-6-9-10 2 2-10-9-5 9-5-2-10 10 2z" fill="none" stroke="url(#lg)" stroke-width="1.6"/>
+<path d="M24 13v20M16 17h16M16 17l-4 8a4 4 0 0 0 8 0zM32 17l-4 8a4 4 0 0 0 8 0zM19 34h10" fill="none" stroke="url(#lg)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+function setLangAttrs(){document.documentElement.lang=S.lang;document.documentElement.dir=S.lang==="ar"?"rtl":"ltr";document.title=L().app}
+
+function render(){
+  setLangAttrs();
+  const l=L();
+  document.getElementById("tabbar").innerHTML=["today","mizan","kabair","settings"].map(v=>`<button class="${view===v?"on":""}" data-tab="${v}">${ICON[v]}<span>${l[v]}</span></button>`).join("");
+  const head=`<header><div class="brand">${LOGO}<div><h1>${l.app}</h1><small>${l.tag}</small></div></div>
+  <div class="hdr-r"><div class="lang">${["en","ar","fr"].map(g=>`<button data-lang="${g}" class="${S.lang===g?"on":""}">${g==="ar"?"ع":g.toUpperCase()}</button>`).join("")}</div>
+  ${S.pin?`<button class="icbtn" data-act="lock" title="Lock">${ICON.lock}</button>`:""}</div></header>`;
+  let body="";
+  if(view==="today")body=rToday();else if(view==="mizan")body=rMizan();else if(view==="kabair")body=rKabair();else body=rSettings();
+  document.getElementById("app").innerHTML=head+body+`<div class="foot">${l.privacy}<br>${l.disc}</div>`;
+  if(!unlocked)showLock();
+  else if(!S.intro)showIntro();
+}
+
+function mizanSVG(good,bad){
+  const tot=good+bad;let a=tot?((bad-good)/Math.max(tot,40))*16:0;a=Math.max(-16,Math.min(16,a));
+  const Lb=118,dy=Math.sin(a*Math.PI/180)*Lb;
+  return `<svg class="mizan" viewBox="0 0 320 210">
+  <defs><linearGradient id="gb" x1="0" x2="1"><stop offset="0" stop-color="#f1d79c"/><stop offset="1" stop-color="#b8893e"/></linearGradient>
+  <radialGradient id="gg"><stop offset="0" stop-color="#3ccf91" stop-opacity=".55"/><stop offset="1" stop-color="#3ccf91" stop-opacity="0"/></radialGradient>
+  <radialGradient id="gr"><stop offset="0" stop-color="#ff5d6c" stop-opacity=".55"/><stop offset="1" stop-color="#ff5d6c" stop-opacity="0"/></radialGradient></defs>
+  <path d="M160 40V188M128 192h64" stroke="url(#gb)" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="160" cy="36" r="7" fill="url(#gb)"/>
+  <g class="beam" style="transform:rotate(${a}deg);transform-origin:160px 46px"><rect x="40" y="43" width="240" height="6" rx="3" fill="url(#gb)"/><circle cx="42" cy="46" r="5" fill="#f1d79c"/><circle cx="278" cy="46" r="5" fill="#f1d79c"/></g>
+  <g class="panL" style="transform:translateY(${-dy}px)">
+    <path d="M42 48L14 118M42 48L70 118" stroke="#d9b46a" stroke-opacity=".7" stroke-width="1.4"/>
+    <ellipse cx="42" cy="124" rx="44" ry="26" fill="url(#gg)"/>
+    <path d="M6 118h72a36 14 0 0 1-72 0z" fill="#1d5a43" stroke="#3ccf91" stroke-width="1.5"/>
+    <text x="42" y="150" text-anchor="middle" fill="#3ccf91" font-size="14" font-weight="800" font-family="Manrope">${num(good)}</text></g>
+  <g class="panR" style="transform:translateY(${dy}px)">
+    <path d="M278 48L250 118M278 48L306 118" stroke="#d9b46a" stroke-opacity=".7" stroke-width="1.4"/>
+    <ellipse cx="278" cy="124" rx="44" ry="26" fill="url(#gr)"/>
+    <path d="M242 118h72a36 14 0 0 1-72 0z" fill="#5a1d26" stroke="#ff5d6c" stroke-width="1.5"/>
+    <text x="278" y="150" text-anchor="middle" fill="#ff8a95" font-size="14" font-weight="800" font-family="Manrope">${num(bad)}</text></g>
+  </svg>`;
+}
+
+function dateLabel(k){
+  const l=L(),t=dkey(new Date());
+  const loc={en:"en-GB",ar:"ar-u-nu-latn",fr:"fr-FR"}[S.lang];
+  let main=dparse(k).toLocaleDateString(loc,{weekday:"long",day:"numeric",month:"long"});
+  let hij="";try{hij=dparse(k).toLocaleDateString((S.lang==="ar"?"ar-u-ca-islamic-umalqura-nu-latn":loc+"-u-ca-islamic-umalqura"),{day:"numeric",month:"long",year:"numeric"})}catch(e){}
+  const pre=k===t?l.todayLbl+" · ":k===shift(t,-1)?l.yesterday+" · ":"";
+  return `${pre}${main}<small>${hij}</small>`;
+}
+
+function verdict(s){
+  const v=L().v;
+  if(!s.any)return["",v.empty];
+  if(s.open)return["heavy",v.heavy];
+  if(s.wj<WAJIB.length&&s.prayers<5)return["",v.wajib];
+  if(s.net>=80)return["",v.bright];
+  if(s.net<0)return["",v.low];
+  return["",v.steady];
+}
+
+function rToday(){
+  const l=L(),s=score(cur),d=day(cur),t=dkey(new Date());
+  const [vc,vt]=verdict(s);
+  const netc=s.net>0?"pos":s.net<0?"neg":"zero";
+  const pmax=Math.max(30,...Object.values(s.per).map(x=>x[0]+x[1]));
+  let h=`<div class="datebar"><button data-act="prev"><span class="flip">‹</span></button><div class="d">${dateLabel(cur)}</div><button data-act="next" ${cur>=t?"disabled":""}><span class="flip">›</span></button></div>
+  <p class="introline">${l.intro}</p>`;
+  // repair panel
+  const kb=Object.keys(d.c).filter(id=>BY[id]&&BY[id].t==="kabaira"&&d.c[id]>0);
+  if(kb.length){h+=`<div class="repair"><h3>⚠️ ${l.repairT}</h3>${kb.map(id=>{const it=BY[id],r=d.r[id]||{};const ok=resolved(d,id);
+    return`<div class="rrow"><div class="rn ${ok?"ok":""}">${it.em} ${esc(nm(it))} ×${num(d.c[id])}</div>
+    <button class="tog ${r.t?"on":""}" data-rep="${id}" data-k="t"><span class="bx">${r.t?"✓":""}</span>${l.tawbah}</button>
+    ${it.h?`<button class="tog ${r.x?"on":""}" data-rep="${id}" data-k="x"><span class="bx">${r.x?"✓":""}</span>${l.restored}</button>`:""}</div>`}).join("")}<button class="tog" data-act="goislah" style="margin-top:8px;border-color:rgba(92,200,232,.5);color:#9fdcef">${l.seeIslah}</button></div>`}
+  h+=`<div class="chips">${["all","s","f","w","e"].map(p=>`<button class="chip ${filter===p?"on":""}" data-filter="${p}">${p==="all"?"✦ "+l.all:PIC[p]+" "+l.pillars[p]}</button>`).join("")}</div>`;
+  for(const t of TIERS){
+    const list=ITEMS.filter(i=>i.t===t&&(filter==="all"||i.p===filter));if(!list.length)continue;
+    let sum=0;list.forEach(i=>{const n=d.c[i.id]||0;if(t==="kabaira"&&resolved(d,i.id))return;sum+=i.pts*n});
+    h+=`<section class="tier" id="tier-${t}"><div class="tier-h"><h2><i style="background:${TCOL[t]}"></i>${l.tiers[t][0]}</h2><p>${l.tiers[t][1]}</p><span class="sum" style="color:${TCOL[t]}">${sum?fmt(sum):""}</span></div>${t==="islah"?`<p class="islah-note">${l.islahN}</p>`:""}<div class="grid">`;
+    h+=list.map(i=>{const n=d.c[i.id]||0;return`<button class="item t-${t} ${n?"has":""}" data-item="${i.id}">
+      <span class="em">${i.em}</span><span class="tx"><span class="nm">${esc(nm(i))}</span><span class="meta"><span class="pts">${fmt(i.pts)}</span>${i.h?`<span class="hr">${l.hr}</span>`:""}${t==="kabaira"&&i.ref?`<span class="info" data-ref="${i.id}" title="${l.src}">i</span>`:""}</span></span>
+      <span class="cnt">${t==="wajib"?(n?"✓":""):num(n)}</span>${t!=="wajib"?`<span class="minus" data-minus="${i.id}">−</span>`:""}</button>`}).join("");
+    h+=`</div></section>`;
+  }
+  h+=`<div class="sec-title" id="results">${l.results}</div><div class="hero"><div class="panel mizan-wrap">${mizanSVG(s.good,s.bad)}<div class="net ${netc}">${fmt(s.net)}</div><div class="netlbl">${l.net}</div><div class="verdict ${vc}">${vt}</div></div>
+  <div class="panel"><div class="stats">
+   <div class="stat"><b style="color:var(--gold2)">${num(s.prayers)}/${num(5)}</b><span>🕌 ${l.oblig} · ${num(s.wj)} ${l.ofN} ${num(WAJIB.length)}</span></div>
+   <div class="stat"><b style="color:var(--hasanat)">${fmt(s.good)}</b><span>${l.good}</span></div>
+   <div class="stat"><b style="color:var(--kabaira)">${fmt(-s.bad)}</b><span>${l.bad}</span></div>
+   <div class="stat"><b style="color:${s.open?"var(--kabaira)":"var(--mute)"}">${num(s.open)}</b><span>${l.owed}</span></div></div>
+   <div class="pbars">${Object.keys(PIC).map(p=>{const[g,b]=s.per[p];return`<div class="pbar"><span class="ic">${PIC[p]}</span><div><div>${l.pillars[p]}</div><div class="track"><div class="g" style="width:${g/pmax*100}%"></div><div class="b" style="width:${b/pmax*100}%"></div></div></div><em style="color:${g-b<0?"var(--kabaira)":g-b>0?"var(--hasanat)":"var(--dim)"}">${fmt(g-b)}</em></div>`}).join("")}</div>
+  </div></div>
+  <div class="muflis">${ICON.quote}<div><div class="q">${l.muflis}</div><small>${l.muflisSrc}</small></div></div><div class="est">${l.est}</div>`;
+  h+=`<div class="sec-title">${l.note}</div><textarea class="note" id="note" placeholder="${esc(l.noteP)}">${esc(d.note||"")}</textarea>`;
+  h+=`<button class="scorepill ${netc}" data-act="goresults">⚖️ <b>${fmt(s.net)}</b>${s.open?` · <span style="color:var(--kabaira)">⚠ ${num(s.open)}</span>`:""}</button>`;
+  return h;
+}
+
+function rMizan(){
+  const l=L(),t=dkey(new Date());
+  const ks=[];for(let i=13;i>=0;i--)ks.push(shift(t,-i));
+  const sc=ks.map(score);
+  // streak
+  let st=0;for(let i=0;;i++){const k=shift(t,-i);const s=score(k);if(s.prayers===5)st++;else if(i===0)continue;else break;if(i>400)break}
+  const used=sc.filter(s=>s.any);
+  const avg=used.length?Math.round(used.reduce((a,s)=>a+s.net,0)/used.length):0;
+  const clean=used.filter(s=>!s.kab).length;
+  const owed=Object.keys(S.days).reduce((a,k)=>a+score(k).open,0);
+  const W=640,H=230,pad=28,bw=(W-pad*2)/14;
+  const mx=Math.max(60,...sc.map(s=>Math.abs(s.net)));const mid=H/2;
+  const loc={en:"en-GB",ar:"ar-u-nu-latn",fr:"fr-FR"}[S.lang];
+  let bars="";sc.forEach((s,i)=>{const x=pad+i*bw+bw*.18,w=bw*.64,hgt=Math.abs(s.net)/mx*(mid-26);const y=s.net>=0?mid-hgt:mid;
+    const c=s.net>=0?"#3ccf91":"#ff5d6c";
+    bars+=`<rect x="${x}" y="${y}" width="${w}" height="${Math.max(hgt,s.any?2:0)}" rx="4" fill="${c}" opacity="${ks[i]===t?1:.8}"><title>${ks[i]}: ${s.net}</title></rect>`;
+    if(s.kab)bars+=`<circle cx="${x+w/2}" cy="${mid+ (s.net>=0?14:hgt+12)}" r="4" fill="#ff5d6c" stroke="#07130f" stroke-width="1.5"/>`;
+    const dd=dparse(ks[i]);bars+=`<text x="${x+w/2}" y="${H-4}" text-anchor="middle" fill="#6f8178" font-size="11">${dd.toLocaleDateString(loc,{day:"numeric"})}</text>`;});
+  const ordered=S.lang==="ar"?`<g transform="translate(${W},0) scale(-1,1)">${bars.replace(/<text[^>]*>[^<]*<\/text>/g,"")}</g>`+[...bars.matchAll(/<text x="([\d.]+)"([^>]*)>([^<]*)<\/text>/g)].map(m=>`<text x="${W-m[1]}"${m[2]}>${m[3]}</text>`).join(""):bars;
+  let h=`<div class="sec-title" style="margin-top:4px">${l.mizan}</div>
+  <div class="hgrid">
+   <div class="stat"><b style="color:var(--gold2)">${num(st)}</b><span>🕌 ${l.streak} (${l.days})</span></div>
+   <div class="stat"><b style="color:${avg>=0?"var(--hasanat)":"var(--kabaira)"}">${fmt(avg)}</b><span>${l.avg}</span></div>
+   <div class="stat"><b style="color:var(--gold2)">${num(clean)}/${num(used.length)}</b><span>${l.clean}</span></div>
+   <div class="stat"><b style="color:${owed?"var(--kabaira)":"var(--mute)"}">${num(owed)}</b><span>${l.owed}</span></div></div>
+  <div class="panel"><h3 style="font-size:14px;color:var(--mute);margin-bottom:8px">${l.last14}</h3>
+  <svg class="chart" viewBox="0 0 ${W} ${H}"><line x1="${pad}" x2="${W-pad}" y1="${mid}" y2="${mid}" stroke="rgba(217,180,106,.3)" stroke-dasharray="3 4"/>${ordered}</svg>
+  <div class="legend"><span><i style="background:#3ccf91"></i>${l.good}</span><span><i style="background:#ff5d6c"></i>${l.bad}</span><span><i style="background:#ff5d6c;border-radius:50%"></i>${l.tiers.kabaira[0]}</span></div></div>
+  <div class="sec-title">${l.pillarH}</div><div class="heat">`;
+  for(const p of Object.keys(PIC)){let g=0,b=0;sc.forEach(s=>{g+=s.per[p][0];b+=s.per[p][1]});
+    const tot=g+b,pc=tot?Math.round(g/tot*100):0;
+    h+=`<div class="hc"><div class="h1">${PIC[p]} ${l.pillars[p]}</div><div class="h2" style="color:${g-b>=0?"var(--hasanat)":"var(--kabaira)"}">${fmt(g-b)}</div>
+    <div class="track" style="height:8px;border-radius:8px;background:rgba(255,93,108,.35);margin:8px 0 6px;overflow:hidden"><div style="height:100%;width:${tot?pc:0}%;background:var(--hasanat)"></div></div>
+    <div class="h3">${l.good} ${num(g)} · ${l.bad} ${num(b)}</div></div>`}
+  h+=`</div>`;
+  return h;
+}
+
+function rKabair(){
+  const l=L();
+  let h=`<div class="sec-title" style="margin-top:4px">${l.tiers.kabaira[0]} — ${l.tiers.kabaira[1]}</div><p class="kintro">${l.kIntro}</p>
+  <div class="safety"><span style="font-size:22px">🛡️</span><div>${l.safety}</div></div>
+  <div class="panel" style="margin-bottom:16px"><h3 style="font-family:var(--fh);font-size:22px">${l.stepsT}</h3><div class="steps">${l.steps.map((s,i)=>`<div class="step"><b>${num(i+1)}</b>${s}</div>`).join("")}</div></div>`;
+  for(const p of Object.keys(PIC)){
+    const list=ITEMS.filter(i=>i.t==="kabaira"&&i.p===p).sort((a,b)=>a.pts-b.pts);
+    h+=`<div class="sec-title" style="font-size:21px">${PIC[p]} ${l.pillars[p]}</div><div class="klist">`+list.map(i=>`<div class="kcard"><div class="top"><span class="em">${i.em}</span><h4>${esc(nm(i))}</h4><span class="w">${fmt(i.pts)}</span></div>
+    ${i.ref?`<div class="refs" style="margin-top:8px">${refLinks(i.ref)}</div>`:""}<div class="tags">${i.h?`<span class="hr">${l.hr}</span>`:""}</div></div>`).join("")+`</div>`;
+  }
+  return h;
+}
+
+function rSettings(){
+  const l=L();
+  return `<div class="sec-title" style="margin-top:4px">${l.settings}</div><div class="set">
+  <div class="panel"><h3>${l.lang}</h3><div class="row" style="margin-top:8px">${[["en","English"],["ar","العربية"],["fr","Français"]].map(([g,n])=>`<button class="btn ${S.lang===g?"gold":""}" data-lang="${g}">${n}</button>`).join("")}</div></div>
+  <div class="panel"><h3>🔒 ${l.lockT}</h3><p class="small">${l.lockN}</p><div class="row" style="margin-top:10px">
+   ${S.pin?`<button class="btn red" data-act="rmpin">${l.rmPin}</button>`:`<input class="inp" id="pin" inputmode="numeric" maxlength="8" placeholder="${l.pinPh}" type="password"><button class="btn gold" data-act="setpin">${l.setPin}</button>`}</div></div>
+  <div class="panel"><h3>💾 ${l.backT}</h3><p class="small">${l.backN}</p><div class="row" style="margin-top:10px"><button class="btn gold" data-act="copy">${l.copy}</button>
+   <label class="btn" style="cursor:pointer">${l.file}<input type="file" id="file" accept=".json,.txt,application/json" hidden></label></div>
+   <textarea class="note" id="paste" style="margin-top:10px;min-height:70px" placeholder="${l.pastePh}"></textarea><div class="row" style="margin-top:8px"><button class="btn" data-act="restore">${l.restore}</button></div></div>
+  <div class="panel"><h3>🗑️ ${l.eraseT}</h3><p class="small">${l.eraseN}</p><div class="row" style="margin-top:10px"><button class="btn red" data-act="erase">${l.erase}</button></div></div>
+  </div>`;
+}
+
+
+const COLL={Bukhari:["bukhari","Bukhari","البخاري","Bukhari"],Muslim:["muslim","Muslim","مسلم","Muslim"],Tirmidhi:["tirmidhi","Tirmidhi","الترمذي","Tirmidhi"],"Abu Dawud":["abudawud","Abu Dawud","أبو داود","Abou Dawoud"],"Ibn Majah":["ibnmajah","Ibn Majah","ابن ماجه","Ibn Majah"],"Nasa'i":["nasai","Nasa'i","النسائي","Nasa'i"]};
+function refLinks(ref){
+  const li=S.lang==="ar"?2:S.lang==="fr"?3:1,qn={en:"Qur'an",ar:"القرآن",fr:"Coran"}[S.lang];
+  return ref.split(" · ").map(r=>{r=r.trim();let m;
+    if(m=r.match(/^(\d+):(\d+)(?:[–-](\d+))?/)){const v=m[3]?`${m[2]}-${m[3]}`:m[2];return `<a class="reflink" href="https://quran.com/${m[1]}/${v}" target="_blank" rel="noopener">📖 ${qn} <bdi dir="ltr">${esc(r)}</bdi></a>`}
+    for(const k in COLL){if(r.startsWith(k)){const c=COLL[k],n=(r.slice(k.length).match(/\d+/)||[])[0];
+      return n?`<a class="reflink" href="https://sunnah.com/${c[0]}:${n}" target="_blank" rel="noopener">📜 ${c[li]} ${n}</a>`:`<span class="reflink">📜 ${c[li]}${esc(r.slice(k.length))}</span>`}}
+    return `<span class="reflink">${esc(r)}</span>`}).join("");
+}
+function showRef(id){const i=BY[id],l=L();modal(`<div class="modal mini"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:22px">${i.em}</span><b style="flex:1;font-size:15px">${esc(nm(i))}</b><button class="icbtn" data-act="close" style="width:30px;height:30px">✕</button></div><div class="small" style="margin:10px 0 6px">${l.src}</div><div class="refs">${refLinks(i.ref)}</div></div>`)}
+/* ============ overlays ============ */
+const layer=document.getElementById("layer");
+function modal(html){layer.innerHTML=`<div class="ov" data-ov>${html}</div>`}
+function close(){layer.innerHTML=""}
+function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),1800)}
+function showIntro(){const l=L();modal(`<div class="modal" style="text-align:center">${LOGO.replace('class="logo"','class="logo" style="width:64px;height:64px"')}<h3 style="margin-top:8px">${l.introT}</h3><p>${l.introB}</p>
+ <div class="row" style="justify-content:center;margin-top:14px">${[["en","English"],["ar","العربية"],["fr","Français"]].map(([g,n])=>`<button class="btn ${S.lang===g?"gold":""}" data-lang="${g}">${n}</button>`).join("")}</div>
+ <div class="est" style="text-align:start;margin-top:14px">${l.est}</div><p class="small" style="margin-top:10px">${l.privacy}</p><div class="row" style="justify-content:center"><button class="btn gold" data-act="begin" style="padding:12px 30px">${l.begin}</button></div></div>`)}
+function showLock(){const l=L();layer.innerHTML=`<div class="lock"><div class="box">${LOGO.replace('class="logo"','class="logo" style="width:72px;height:72px"')}<h2 style="font-family:var(--fh);font-size:30px;color:var(--gold2)">${l.app}</h2><p class="small">${l.enter}</p>
+ <input class="inp" id="unpin" type="password" inputmode="numeric" maxlength="8" autofocus><button class="btn gold" data-act="unlock">${l.unlock}</button><p class="small" id="lockmsg"></p></div></div>`;setTimeout(()=>{const e=document.getElementById("unpin");e&&e.focus()},50)}
+async function hash(p){try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("hasanat:"+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}catch(e){let h=0;for(const c of "hasanat:"+p)h=(h*31+c.charCodeAt(0))|0;return "x"+h}}
+async function tryUnlock(){const e=document.getElementById("unpin");if(!e)return;if(await hash(e.value)===S.pin){unlocked=true;close();render()}else{e.value="";e.classList.remove("shake");void e.offsetWidth;e.classList.add("shake");document.getElementById("lockmsg").textContent=L().wrong}}
+
+function askKabira(id){const l=L(),i=BY[id];modal(`<div class="modal"><h3>${i.em} ${l.recT}</h3><p style="color:var(--ink);font-weight:600;font-size:15px">${esc(nm(i))} <span class="pts" style="background:rgba(255,93,108,.15);color:var(--kabaira);padding:2px 8px;border-radius:99px;font-size:12px">${fmt(i.pts)}</span></p>
+ ${i.ref?`<div class="refs" style="margin:10px 0">${refLinks(i.ref)}</div>`:""}<p>${l.recB}</p>${i.p==="f"||id==="harass"?`<div class="safety" style="margin:12px 0 0;font-size:12.5px">${l.safety}</div>`:""}
+ <div class="row"><button class="btn" data-act="close">${l.cancel}</button><button class="btn red" data-act="dokab" data-id="${id}" style="background:rgba(255,93,108,.15)">${l.rec}</button></div></div>`)}
+
+/* ============ actions ============ */
+function bump(id,n){const d=ensure(cur);const it=BY[id];let v=(d.c[id]||0)+n;if(it.t==="wajib")v=v>0?1:0;if(v<=0){delete d.c[id];delete d.r[id]}else d.c[id]=Math.min(v,99);save();render()}
+
+document.addEventListener("click",async e=>{
+  const rf=e.target.closest("[data-ref]");if(rf){e.stopPropagation();showRef(rf.dataset.ref);return}
+  if(e.target.closest("a.reflink"))return;
+  const el=e.target.closest("[data-tab],[data-lang],[data-act],[data-item],[data-minus],[data-filter],[data-rep],[data-ov]");if(!el)return;
+  if(el.dataset.ov!==undefined&&e.target===el&&S.intro&&unlocked){close();return}
+  if(el.dataset.ov!==undefined)return;
+  if(el.dataset.tab){view=el.dataset.tab;try{history.replaceState(null,"","#"+view)}catch(_){location.hash=view}render();scrollTo({top:0,behavior:"smooth"});return}
+  if(el.dataset.lang){S.lang=el.dataset.lang;save();render();return}
+  if(el.dataset.filter){filter=el.dataset.filter;render();return}
+  if(el.dataset.minus){e.stopPropagation();bump(el.dataset.minus,-1);return}
+  if(el.dataset.item){const id=el.dataset.item,it=BY[id];const d=day(cur);
+    if(it.t==="wajib"){bump(id,d.c[id]?-1:1);return}
+    if(it.t==="kabaira"){askKabira(id);return}
+    bump(id,1);return}
+  if(el.dataset.rep){const d=ensure(cur);const r=d.r[el.dataset.rep]||(d.r[el.dataset.rep]={});r[el.dataset.k]=!r[el.dataset.k];save();render();return}
+  const a=el.dataset.act,l=L();
+  if(a==="prev"){cur=shift(cur,-1);render()}
+  else if(a==="next"){if(cur<dkey(new Date())){cur=shift(cur,1);render()}}
+  else if(a==="close")close();
+  else if(a==="goresults"){const x=document.getElementById("results");x&&x.scrollIntoView({behavior:"smooth"})}
+  else if(a==="goislah"){const x=document.getElementById("tier-islah");x&&x.scrollIntoView({behavior:"smooth"})}
+  else if(a==="begin"){S.intro=true;save();close()}
+  else if(a==="dokab"){close();bump(el.dataset.id,1)}
+  else if(a==="lock"){unlocked=false;showLock()}
+  else if(a==="unlock")tryUnlock();
+  else if(a==="setpin"){const v=(document.getElementById("pin").value||"").trim();if(!/^\d{4,8}$/.test(v)){toast(l.pinPh);return}S.pin=await hash(v);save();toast(l.pinSet);render()}
+  else if(a==="rmpin"){S.pin=null;save();toast(l.pinOff);render()}
+  else if(a==="copy"){const data=JSON.stringify({app:"hasanat-score",v:1,days:S.days,lang:S.lang});
+    try{await navigator.clipboard.writeText(data);toast(l.copied)}catch(_){const p=document.getElementById("paste");p.value=data;p.select();toast("⌘/Ctrl + C")}}
+  else if(a==="restore")restoreFrom(document.getElementById("paste").value);
+  else if(a==="erase")modal(`<div class="modal"><h3>🗑️ ${l.eraseT}</h3><p>${l.sure}</p><div class="row"><button class="btn" data-act="close">${l.cancel}</button><button class="btn red" data-act="doerase">${l.yes}</button></div></div>`);
+  else if(a==="doerase"){S.days={};S.pin=null;save();close();toast(l.erased);render()}
+});
+function restoreFrom(txt){const l=L();try{const o=JSON.parse(txt);if(!o||typeof o.days!=="object")throw 0;S.days=o.days;if(o.lang)S.lang=o.lang;save();toast(l.restoredOk);render()}catch(_){toast(l.invalid)}}
+document.addEventListener("change",e=>{if(e.target.id==="file"){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>restoreFrom(r.result);r.readAsText(f)}});
+document.addEventListener("input",e=>{if(e.target.id==="note"){ensure(cur).note=e.target.value;save()}});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="unpin")tryUnlock();if(e.key==="Escape"&&unlocked&&S.intro)close()});
+addEventListener("hashchange",()=>{const v=location.hash.slice(1);if(["today","mizan","kabair","settings"].includes(v)&&v!==view){view=v;render()}});
+render();
+</script>
+</body>
+</html>
