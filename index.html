@@ -107,6 +107,32 @@ html[dir=rtl] .muflis .q{font-size:21px}
 .cite .cl{font-size:12px;font-weight:700;color:var(--gold2);margin-bottom:8px}
 .cite .ca{font-family:Amiri,serif;font-size:21px;line-height:1.9;color:var(--ink);text-align:right}
 .cite .ce{font-size:13.5px;line-height:1.55;color:var(--mute);margin-top:8px;font-style:italic}
+
+.hellbox{margin-top:10px;padding:14px;border-radius:14px;border:1px solid rgba(255,93,108,.4);background:rgba(255,93,108,.07)}
+.hellbox.s3,.hellbox.s4{border-color:rgba(255,106,26,.7);background:linear-gradient(180deg,rgba(255,80,20,.14),rgba(255,93,108,.05))}
+.hellbox p{font-size:13px;color:var(--mute);margin-top:6px;line-height:1.55}
+.hellbox .rrow{margin-top:6px}
+.gwrap{position:relative;border-radius:16px;overflow:hidden;border:2px solid rgba(217,180,106,.45);box-shadow:0 10px 40px rgba(0,0,0,.35);background:#0b1430}
+#gcv{display:block;width:100%;height:auto;image-rendering:pixelated;image-rendering:crisp-edges;aspect-ratio:192/108}
+.gempty{position:absolute;inset:auto 10px 10px 10px;background:rgba(7,19,15,.78);padding:10px 12px;border-radius:10px;font-size:13px;text-align:center}
+.grow3{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:12px}
+.gstat{display:flex;gap:12px;align-items:center;padding:12px 14px}
+.gstat b{font-family:var(--fh);font-size:26px;color:var(--gold2)}
+#flame{width:40px;height:50px;image-rendering:pixelated;flex:none}
+.rank{font-size:22px!important}
+.xpbar{height:8px;border-radius:8px;background:rgba(255,255,255,.08);overflow:hidden;margin:7px 0 5px}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:8px;transition:width .8s}
+.xpbar.sm{height:5px;margin:6px 0 3px}
+.quests{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.quest{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px}
+.quest.ok{border-color:rgba(60,207,145,.5)}.quest.ok .xpbar i{background:var(--hasanat)}
+.quest .qn{font-weight:600;font-size:13.5px}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.badge{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px;text-align:center;filter:grayscale(1);opacity:.55}
+.badge.ok{filter:none;opacity:1;border-color:rgba(217,180,106,.55);box-shadow:0 0 22px rgba(217,180,106,.15)}
+.badge .bi{font-size:30px}.badge .bn{font-weight:700;font-size:13px;margin-top:4px;color:var(--gold2)}.badge .bd{font-size:11.5px;color:var(--mute);margin-top:3px;line-height:1.35}
+.legend2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px 14px;font-size:13px;color:var(--mute);margin-bottom:10px}
+@media(max-width:520px){.grow3{grid-template-columns:1fr}}
 .item .tx{flex:1;min-width:0}
 .item .nm{font-size:13.5px;font-weight:600;line-height:1.3}
 .item .meta{display:flex;gap:6px;align-items:center;margin-top:3px;flex-wrap:wrap}
@@ -476,7 +502,7 @@ let mem=true;
 try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){mem=false}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 let view=(location.hash||"").slice(1)||"today";
-if(!["today","mizan","kabair","settings"].includes(view))view="today";
+if(!["today","garden","mizan","kabair","settings"].includes(view))view="today";
 let filter="all";
 let cur=dkey(new Date());
 let unlocked=!S.pin;
@@ -507,6 +533,7 @@ function score(k){
 /* ============ render ============ */
 const ICON={
 today:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>',
+garden:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22V11"/><path d="M12 11c-4 0-7-2-8-6 4-1 7 1 8 6z"/><path d="M12 13c3 0 6-2 7-5-3-1-6 1-7 5z"/><path d="M5 22h14"/></svg>',
 mizan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM8 21h8"/></svg>',
 kabair:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5-6.5 4.5 2-7.5L2 9h7z"/></svg>',
 settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>',
@@ -523,12 +550,13 @@ function setLangAttrs(){document.documentElement.lang=S.lang;document.documentEl
 function render(){
   setLangAttrs();
   const l=L();
-  document.getElementById("tabbar").innerHTML=["today","mizan","kabair","settings"].map(v=>`<button class="${view===v?"on":""}" data-tab="${v}">${ICON[v]}<span>${l[v]}</span></button>`).join("");
+  document.getElementById("tabbar").innerHTML=["today","garden","mizan","kabair","settings"].map(v=>`<button class="${view===v?"on":""}" data-tab="${v}">${ICON[v]}<span>${l[v]||G()[v]}</span></button>`).join("");
   const head=`<header><div class="brand">${LOGO}<div><h1>${l.app}</h1><small>${l.tag}</small></div></div>
   <div class="hdr-r"><div class="lang">${["en","ar","fr"].map(g=>`<button data-lang="${g}" class="${S.lang===g?"on":""}">${g==="ar"?"ع":g.toUpperCase()}</button>`).join("")}</div>
   ${S.pin?`<button class="icbtn" data-act="lock" title="Lock">${ICON.lock}</button>`:""}</div></header>`;
   let body="";
-  if(view==="today")body=rToday();else if(view==="mizan")body=rMizan();else if(view==="kabair")body=rKabair();else body=rSettings();
+  if(view!=="garden")cancelAnimationFrame(gAnim);if(unlocked&&S.intro)checkBadges();
+  if(view==="today")body=rToday();else if(view==="garden")body=rGarden();else if(view==="mizan")body=rMizan();else if(view==="kabair")body=rKabair();else body=rSettings();
   document.getElementById("app").innerHTML=head+body+`<div class="foot">${l.privacy}<br>${l.disc}</div>`;
   if(!unlocked)showLock();
   else if(!S.intro)showIntro();
@@ -701,6 +729,204 @@ function refLinks(ref){
     return `<span class="reflink">${esc(r)}</span>`}).join("");
 }
 function showRef(id){const i=BY[id],l=L();modal(`<div class="modal mini"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:22px">${i.em}</span><b style="flex:1;font-size:15px">${esc(nm(i))}</b><button class="icbtn" data-act="close" style="width:30px;height:30px">✕</button></div>${i.t==="wajib"?`<div class="small" style="margin:10px 0 0"><b style="color:var(--wajib)">✓ ${fmt(i.pts)}</b> · <b style="color:var(--kabaira)">✗ ${fmt(i.miss)}</b></div>${WHY[id]?`<p style="margin:8px 0 0;font-size:13.5px;line-height:1.55">${WHY[id][S.lang]}</p>`:""}`:""}${cite(i.ref)}</div>`)}
+
+/* ============ GAME: Jannah garden, streak, levels, badges, quests ============ */
+const GT={
+en:{garden:"Jannah",stg:["","🥀 Your garden is wilting — a major sin is still without tawbah.","🍂 Your garden is dying — the trees have lost their leaves and the river has dried up.","🔥 Your garden is scorched — the earth is cracking and the sky is red.","🔥🔥 Your garden has become like a fire. But the door of tawbah is still open — notice the mosque’s light never goes out."],hope:"“Say: O My servants who have wronged themselves, do not despair of Allah’s mercy. Indeed, Allah forgives all sins.” (39:53) — Tick sincere tawbah below and watch it bloom again.",openT:"Open major sins — repair them here",gTitle:"Your Jannah garden",gSub:"Every deed plants something. Private — only you see it.",
+ rank:["Muslim","Mu'min","Muhsin"],level:"Level",xp:"XP",toNext:"to next level",
+ streakT:"Prayer flame",best:"Best",daysL:"days",qadaN:"Missed a prayer? Make it up (qada) the same day and your flame survives.",
+ badgesT:"Badges",questsT:"This week's quests",questN:"Each completed quest lights a lantern in your garden.",done:"Done",
+ legT:"How your garden grows",wilt:"Your garden is wilting — a major sin is still open. Sincere tawbah will make it bloom again.",
+ empty:"Your garden is waiting. Record tonight's deeds and plant your first seed 🌱",newBadge:"New badge",
+ leg:{palm:"Palm trees — 1 per 10 prayers",fruit:"Fruit trees — family kindness",flower:"Flowers — care for the earth",river:"River — charity & zakat",bird:"Birds — feeding & rescuing animals",mosque:"Mosque — Qur'an, qiyam & sunnah",lily:"White lilies — each sincere tawbah",lantern:"Lanterns — completed quests",well:"Fountain — giving water"}},
+ar:{garden:"جنّتي",stg:["","🥀 حديقتك تذبل — كبيرة لم تُتب منها بعد.","🍂 حديقتك تموت — تساقطت أوراق الشجر وجفّ النهر.","🔥 حديقتك محترقة — الأرض تتشقّق والسماء حمراء.","🔥🔥 صارت حديقتك كالنار. لكن باب التوبة ما زال مفتوحًا — انظر، نور المسجد لا ينطفئ أبدًا."],hope:"﴿قُلْ يَا عِبَادِيَ الَّذِينَ أَسْرَفُوا عَلَىٰ أَنفُسِهِمْ لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ إِنَّ اللَّهَ يَغْفِرُ الذُّنُوبَ جَمِيعًا﴾ (الزمر 53) — علّم التوبة الصادقة بالأسفل وشاهدها تزهر من جديد.",openT:"كبائر مفتوحة — أصلحها من هنا",gTitle:"حديقتك في الجنة",gSub:"كل عمل يغرس شيئًا. خاصة — لا يراها غيرك.",
+ rank:["مسلم","مؤمن","محسن"],level:"المستوى",xp:"نقاط",toNext:"للمستوى التالي",
+ streakT:"شعلة الصلاة",best:"الأفضل",daysL:"أيام",qadaN:"فاتتك صلاة؟ اقضِها في اليوم نفسه وتبقى شعلتك مشتعلة.",
+ badgesT:"الأوسمة",questsT:"مهام هذا الأسبوع",questN:"كل مهمة تُنجزها تُضيء فانوسًا في حديقتك.",done:"تمّت",
+ legT:"كيف تنمو حديقتك",wilt:"حديقتك تذبل — هناك كبيرة لم تُتب منها بعد. التوبة الصادقة تُعيد إليها الحياة.",
+ empty:"حديقتك تنتظرك. سجّل أعمال الليلة واغرس بذرتك الأولى 🌱",newBadge:"وسام جديد",
+ leg:{palm:"نخيل — نخلة لكل 10 صلوات",fruit:"أشجار مثمرة — البرّ بالأهل",flower:"أزهار — رعاية الأرض",river:"نهر — الصدقة والزكاة",bird:"طيور — إطعام الحيوان وإنقاذه",mosque:"مسجد — القرآن والقيام والسنن",lily:"زنابق بيضاء — كل توبة صادقة",lantern:"فوانيس — المهام المنجزة",well:"نافورة — سقي الماء"}},
+fr:{garden:"Jannah",stg:["","🥀 Votre jardin se fane — un grand péché est encore sans repentir.","🍂 Votre jardin se meurt — les arbres ont perdu leurs feuilles et la rivière s’est asséchée.","🔥 Votre jardin est brûlé — la terre se fissure et le ciel est rouge.","🔥🔥 Votre jardin est devenu comme un feu. Mais la porte du repentir reste ouverte — voyez, la lumière de la mosquée ne s’éteint jamais."],hope:"« Dis : Ô Mes serviteurs qui avez commis des excès à votre propre détriment, ne désespérez pas de la miséricorde d’Allah. Allah pardonne tous les péchés. » (39:53) — Cochez le repentir sincère ci-dessous et regardez-le refleurir.",openT:"Grands péchés ouverts — réparez-les ici",gTitle:"Votre jardin du Paradis",gSub:"Chaque bonne action y plante quelque chose. Privé — vous seul le voyez.",
+ rank:["Muslim","Mu'min","Muhsin"],level:"Niveau",xp:"XP",toNext:"avant le niveau suivant",
+ streakT:"Flamme de la prière",best:"Record",daysL:"jours",qadaN:"Une prière manquée ? Rattrapez-la (qada) le jour même et votre flamme survit.",
+ badgesT:"Badges",questsT:"Quêtes de la semaine",questN:"Chaque quête accomplie allume une lanterne dans votre jardin.",done:"Fait",
+ legT:"Comment pousse votre jardin",wilt:"Votre jardin se fane — un grand péché est encore ouvert. Un repentir sincère le fera refleurir.",
+ empty:"Votre jardin vous attend. Notez les actes de ce soir et plantez votre première graine 🌱",newBadge:"Nouveau badge",
+ leg:{palm:"Palmiers — 1 pour 10 prières",fruit:"Arbres fruitiers — bonté envers la famille",flower:"Fleurs — soin de la terre",river:"Rivière — aumône et zakat",bird:"Oiseaux — nourrir et sauver les animaux",mosque:"Mosquée — Coran, qiyam et sunna",lily:"Lys blancs — chaque repentir sincère",lantern:"Lanternes — quêtes accomplies",well:"Fontaine — offrir de l'eau"}}
+};
+const G=()=>GT[S.lang];
+const sumc=(c,ids)=>ids.reduce((a,id)=>a+(c[id]||0),0);
+
+function kept(k){const d=day(k),p=PRAYERS.filter(x=>d.c[x]).length,q=d.c.qada||0;return p+Math.min(q,5-p)>=5&&!d.c.missp}
+function streaks(){const t=dkey(new Date());let cur=0;
+  for(let i=0;i<2000;i++){const k=shift(t,-i);if(kept(k))cur++;else if(i===0)continue;else break}
+  const ks=Object.keys(S.days).sort();let best=cur,run=0;
+  if(ks.length){let k=ks[0];for(let i=0;i<4000&&k<=t;i++){if(kept(k)){run++;best=Math.max(best,run)}else run=0;k=shift(k,1)}}
+  return{cur,best}}
+
+function weekStart(k){const d=dparse(k),w=(d.getDay()+1)%7;return shift(k,-w)} // week starts Saturday
+const QPOOL=[["kin",2],["smile",5],["tree",1],["forgive",1],["feed",3],["qiyam",2],["sadaqah",3],["dua",5],["quran",5],["chores",3],["helper",2],["recycle",4],["path",1],["kids",3],["gentle",4],["adhkar",5],["sunnah",5],["water",4],["helpc",3],["serve",3],["ilm",3],["fast",1],["green",3],["budget",3]];
+function quests(ws){let h=0;for(const ch of ws)h=(h*31+ch.charCodeAt(0))>>>0;const r=mulberry(h),pool=QPOOL.slice(),out=[];
+  while(out.length<3){const i=Math.floor(r()*pool.length);out.push(pool.splice(i,1)[0])}
+  return out.map(([id,n])=>{let c=0;for(let i=0;i<7;i++){const d=S.days[shift(ws,i)];if(d&&d.c[id])c+=d.c[id]}return{id,n,c:Math.min(c,n),ok:c>=n}})}
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+function life(){
+  const c={},per={s:0,f:0,w:0,e:0};let xp=0,full=0,tawbah=0,lantern=0,silent=0,run=0,openPts=0;const openList=[];
+  const ks=Object.keys(S.days).sort();
+  for(const k of ks){const d=S.days[k];const sc=score(k);xp+=sc.good;if(sc.prayers===5)full++;
+    for(const id in d.c){const it=BY[id],n=d.c[id];if(!it||!n)continue;c[id]=(c[id]||0)+n;
+      if(it.t==="wajib"||it.t==="hasanat"||it.t==="islah")per[it.p]+=n;
+      if(it.t==="kabaira"){if(resolved(d,id))tawbah++;else{openPts+=-it.pts*n;openList.push([k,id,n])}}}
+    if(sc.any){if(["laghw","gossip","ghiba","namima","lie"].some(x=>d.c[x]))run=0;else{run++;silent=Math.max(silent,run)}}}
+  if(ks.length){const t=dkey(new Date());let w=weekStart(ks[0]);const cw=weekStart(t);
+    for(let i=0;i<600&&w<cw;i++){lantern+=quests(w).filter(q=>q.ok).length;w=shift(w,7)}}
+  let open=0;const t=dkey(new Date());for(let i=0;i<7;i++)open+=score(shift(t,-i)).open;
+  return{c,per,xp,full,tawbah,lantern,silent,open,openPts,openList}}
+
+function lvl(xp){const n=Math.floor(Math.sqrt(xp/40))+1,a=40*(n-1)**2,b=40*n**2;return{n,pct:(xp-a)/(b-a),left:b-xp,rank:n<10?0:n<25?1:2}}
+
+const BADGES=[
+ ["fajr40","🌅",L=>[L.c.fajr||0,40],{en:"Al-Fajr Guardian",ar:"حارس الفجر",fr:"Gardien du Fajr"},{en:"Pray Fajr 40 times",ar:"صلِّ الفجر 40 مرة",fr:"Prier le Fajr 40 fois"}],
+ ["full1","🕌",L=>[L.full,1],{en:"Five Pillars Day",ar:"يوم الخمس",fr:"Journée complète"},{en:"All 5 prayers in one day",ar:"الصلوات الخمس في يوم",fr:"Les 5 prières en un jour"}],
+ ["streak7","🔥",(L,s)=>[s.best,7],{en:"Steady Flame",ar:"شعلة ثابتة",fr:"Flamme constante"},{en:"7-day prayer streak",ar:"7 أيام متتالية من الصلوات",fr:"7 jours de prière d'affilée"}],
+ ["streak40","☀️",(L,s)=>[s.best,40],{en:"Forty Days of Light",ar:"أربعون يومًا من النور",fr:"Quarante jours de lumière"},{en:"40-day prayer streak",ar:"40 يومًا متتالية",fr:"40 jours d'affilée"}],
+ ["qiyam10","✨",L=>[L.c.qiyam||0,10],{en:"Night Worshipper",ar:"قائم الليل",fr:"Adorateur de la nuit"},{en:"Night prayer 10 times",ar:"قيام الليل 10 مرات",fr:"Prière de nuit 10 fois"}],
+ ["quran30","📖",L=>[L.c.quran||0,30],{en:"Companion of the Qur'an",ar:"صاحب القرآن",fr:"Compagnon du Coran"},{en:"Read Qur'an 30 times",ar:"تلاوة القرآن 30 مرة",fr:"Lire le Coran 30 fois"}],
+ ["kin30","📞",L=>[L.c.kin||0,30],{en:"Silat al-Rahim",ar:"واصل الرحم",fr:"Silat al-Rahim"},{en:"Contact relatives 30 times",ar:"صِل رحمك 30 مرة",fr:"Contacter la famille 30 fois"}],
+ ["parents30","👵",L=>[L.c.parents||0,30],{en:"Beloved by Parents",ar:"البارّ بوالديه",fr:"Aimé de ses parents"},{en:"Kindness to parents 30 days",ar:"برّ الوالدين 30 يومًا",fr:"Bonté envers les parents 30 jours"}],
+ ["sadaqah30","💝",L=>[(L.c.sadaqah||0)+(L.c.help10||0),30],{en:"Generous Hand",ar:"اليد العليا",fr:"Main généreuse"},{en:"Give charity 30 times",ar:"تصدّق 30 مرة",fr:"Donner l'aumône 30 fois"}],
+ ["silent7","🤐",L=>[L.silent,7],{en:"Guarded Tongue",ar:"حافظ اللسان",fr:"Langue préservée"},{en:"7 logged days with no gossip or lies",ar:"7 أيام بلا غيبة ولا كذب",fr:"7 jours sans médisance ni mensonge"}],
+ ["earth100","🌿",L=>[L.per.e,100],{en:"Earth Keeper",ar:"حارس الأرض",fr:"Gardien de la Terre"},{en:"100 deeds for the earth & animals",ar:"100 عمل للأرض والحيوان",fr:"100 actes pour la terre et les animaux"}],
+ ["tawbah1","🤍",L=>[L.tawbah,1],{en:"The Returner (At-Tawwab)",ar:"التوّاب",fr:"Celui qui revient"},{en:"Repent sincerely from a major sin — “Allah loves those who repent” (2:222)",ar:"توبة صادقة من كبيرة — ﴿إِنَّ اللَّهَ يُحِبُّ التَّوَّابِينَ﴾",fr:"Se repentir sincèrement d'un grand péché — « Allah aime ceux qui se repentent » (2:222)"}],
+ ["orphan","🧒",L=>[L.c.sponsor||0,1],{en:"Kafil al-Yatim",ar:"كافل اليتيم",fr:"Kafil al-Yatim"},{en:"Sponsor an orphan",ar:"اكفل يتيمًا",fr:"Parrainer un orphelin"}],
+ ["peace","🤝",L=>[L.c.reconcile||0,1],{en:"Peacemaker",ar:"المُصلح",fr:"Artisan de paix"},{en:"Reconcile with a relative",ar:"أصلح ما بينك وبين قريب",fr:"Se réconcilier avec un proche"}],
+ ["tree10","🌴",L=>[(L.c.tree||0)+(L.c.trees10||0)*10,10],{en:"Planter",ar:"الغارس",fr:"Planteur"},{en:"Plant or water 10 trees",ar:"اغرس أو اسقِ 10 أشجار",fr:"Planter ou arroser 10 arbres"}],
+ ["quest10","🏮",L=>[L.lantern,10],{en:"Quest Seeker",ar:"صاحب الهمّة",fr:"Chercheur de quêtes"},{en:"Complete 10 weekly quests",ar:"أنجز 10 مهام أسبوعية",fr:"Accomplir 10 quêtes"}]
+];
+function earned(L,s){return BADGES.filter(b=>{const[a,n]=b[2](L,s);return a>=n}).map(b=>b[0])}
+function checkBadges(){try{const L=life(),s=streaks(),e=earned(L,s);if(!S.bd){S.bd=e;save();return}
+  const nw=e.filter(x=>!S.bd.includes(x));if(nw.length){S.bd=e;save();const b=BADGES.find(x=>x[0]===nw[0]);toast("🏆 "+G().newBadge+": "+b[1]+" "+b[3][S.lang])}}catch(_){}}
+
+/* ---------- pixel art ---------- */
+const PAL={G:"#2f8f4e",g:"#5fd17a",T:"#8a5a2b",t:"#a8743c",Y:"#f2c14e",R:"#e8483f",W:"#f4efe2",B:"#2b2b3a",w:"#ffffff"};
+const WPAL={G:"#7d6b3a",g:"#a3905a",R:"#8a5a3a",Y:"#b39a5a"};
+const SPR={
+palm:["..G.....G..",".GgG...GgG.","Gg.GG.GG.gG","G..GgGgG..G","...YG.GY...",".....T.....",".....t.....","....T......","....t......","....T......",".....t.....",".....T.....","....TTT...."],
+fruit:["...GGGG...","..GgGGgG..",".GGRGGgRG.","GgGGGRGGGG","GRGgGGGgRG",".GGGRGGgG.","..GGGGGG..","....TT....","....Tt....","...TTTT..."],
+sprout:["g.g",".g.",".g."],
+lily:[".w.","wYw",".w.",".g."],
+bird1:["B...B",".B.B.","..B.."],bird2:[".....","BBBBB","..B.."]
+};
+function spr(x,cx,cy,rows,pal,wilt,col){rows.forEach((r,j)=>{for(let i=0;i<r.length;i++){const ch=r[i];if(ch===".")continue;
+  x.fillStyle=ch==="P"?col:((wilt&&WPAL[ch])||pal[ch]||ch);x.fillRect(cx+i,cy+j,1,1)}})}
+
+let gAnim=0;
+function sinStage(p){return p<=0?0:p<1000?1:p<2000?2:p<3500?3:4}
+function drawGarden(cv,L,ql){
+  const x=cv.getContext("2d"),W=192,H=108;x.imageSmoothingEnabled=false;
+  const st=sinStage(L.openPts),hr=new Date().getHours(),night=(hr<6||hr>=18)&&st<2,wilt=st>=1;
+  const c=L.c,pr=sumc(c,PRAYERS),fam=L.per.f,ear=L.per.e;
+  const nPalm=Math.min(12,Math.floor(pr/10)),sproutP=pr%10>0&&nPalm<12;
+  const nFruit=Math.min(8,Math.floor(fam/8)),nFl=st>=2?0:Math.min(70,ear*2);
+  const riv=sumc(c,["sadaqah","zakat","help10","debt","latezakat"]),nBird=st>=2?0:Math.min(8,sumc(c,["feed","rescue","birdwater"]));
+  const msq=sumc(c,["quran","qiyam","sunnah","teach"])+(c.mosque||0)*20,nLily=Math.min(20,L.tawbah),nLant=Math.min(10,L.lantern+ql);
+  const well=(c.well||0)+Math.floor((c.water||0)/20);
+  const t=performance.now()/1000;
+  // plant palettes per stage
+  const PP=[null,WPAL,{G:"#5e4a2a",g:"#6e5a34",R:"#4a3220",Y:"#6e5a34",T:"#4a3220",t:"#5a3e26"},{G:"#2a1c14",g:"#3a261a",R:"#2a1c14",Y:"#3a261a",T:"#1e140e",t:"#2a1c14"},{G:"#140a08",g:"#1e100c",R:"#140a08",Y:"#1e100c",T:"#0e0606",t:"#140a08"}][st];
+  const sprS=(cx,cy,rows,col)=>rows.forEach((r,j)=>{for(let i=0;i<r.length;i++){const ch=r[i];if(ch===".")continue;x.fillStyle=ch==="P"?col:((PP&&PP[ch])||PAL[ch]||ch);x.fillRect(cx+i,cy+j,1,1)}});
+  // sky
+  const SKY=[night?["#0b1430","#101c3d","#16264d","#1d3160"]:["#5bb4f0","#7cc4f3","#9dd4f6","#bfe3f8"],night?["#151a24","#1b212c","#222833","#2a303a"]:["#7d8a94","#8e9aa3","#a0abb2","#b3bcc1"],
+    ["#8a7a5c","#9a8862","#ab966a","#bca474"],["#3a0f08","#5a1a0a","#7a2a0c","#9a3a10"],["#0a0202","#1a0404","#2e0606","#4a0a06"]][st];
+  for(let i=0;i<4;i++){x.fillStyle=SKY[i];x.fillRect(0,i*15,W,15)}
+  if(night){x.fillStyle="#fff";for(let i=0;i<40;i++){const r=mulberry(i+7);const sx=Math.floor(r()*W),sy=Math.floor(r()*55);if(Math.sin(t*2+i)>-.6)x.fillRect(sx,sy,1,1)}
+    x.fillStyle="#f6e7a8";x.fillRect(160,10,8,8);x.fillStyle=SKY[0];x.fillRect(163,9,7,7)}
+  else if(st<4){x.fillStyle=["#ffd75e","#d6d2c0","#e8d9a0","#ff3a1a"][st];x.fillRect(160,8,10,10);x.fillRect(158,10,14,6);x.fillRect(162,6,6,14)}
+  // clouds / smoke
+  x.fillStyle=["#ffffff","#6c757c","#a08c6a","#2a1410","#120606"][st];if(night&&st===0)x.fillStyle="#2a3a66";
+  const nc=st>=3?6:3;for(let i=0;i<nc;i++){const cx=((i*45+t*(3+i))%(W+40))-30,cy=6+(i%3)*9+(st>=3?Math.round(Math.sin(t+i)*2):0);x.fillRect(cx,cy,18+(st>=3?8:0),4);x.fillRect(cx+4,cy-3,9,3)}
+  // hills & ground
+  const HILL=["#4caf63","#6f7a4a","#8a7244","#3e2418","#1a0c08"][st],GR=["#6cc56f","#8a8f55","#a5864e","#4a2a1a","#1c0e0a"][st],DOT=["#5db862","#7c8448","#8e7040","#5a3020","#2a1208"][st];
+  x.fillStyle=night&&st===0?"#1d4a35":HILL;for(let i=0;i<W;i++){const h=52+Math.round(Math.sin(i/17)*3+Math.sin(i/7)*1.5);x.fillRect(i,h,1,60-h+2)}
+  x.fillStyle=night&&st===0?"#245c40":GR;x.fillRect(0,60,W,48);
+  for(let i=0;i<W;i+=3){x.fillStyle=night&&st===0?"#1f5139":DOT;x.fillRect(i,62+((i*7)%40),1,1)}
+  // cracks (stage 2+), glowing at 3-4
+  if(st>=2){for(let i=0;i<14;i++){const r=mulberry(900+i);let cx=Math.floor(r()*W),cy=64+Math.floor(r()*40);
+    x.fillStyle=st===2?"#6a4e2a":st===3?(Math.sin(t*3+i)>0?"#ff6a1a":"#c43a0a"):(Math.sin(t*4+i)>-.3?"#ff3a0a":"#ffb21a");
+    for(let k=0;k<8;k++){x.fillRect(cx,cy,1,1);cx+=r()>.5?1:-1;cy+=r()>.6?1:0}}}
+  // river: water → dry → mud → lava
+  if(riv>0||st>=3){const w=st===2?1:st>=3?Math.max(4,2+Math.min(7,Math.floor(riv/4))):2+Math.min(7,Math.floor(riv/4));
+    for(let i=0;i<W;i++){const y=74+Math.round(Math.sin(i/14)*3);
+      x.fillStyle=st===0?(night?"#2a5fa8":"#3d8fe0"):st===1?"#5a7f9e":st===2?"#7a6a52":st===3?"#8a2a0a":"#ff4a0a";x.fillRect(i,y,1,w);
+      if(st!==2&&Math.sin(i*1.7+t*(st>=3?5:3))>.85){x.fillStyle=st>=3?"#ffd23a":"#cfeaff";x.fillRect(i,y+Math.floor(w/2),1,1)}}}
+  const objs=[];
+  // mosque — never burns: a refuge whose light stays on (door of tawbah is open)
+  if(msq>=10)objs.push({y:66,d:()=>{const bx=140,by=48,big=msq>=60,gold=(c.mosque||0)>0;
+    x.fillStyle="#efe6d2";x.fillRect(bx,by+6,24,14);x.fillStyle=gold?"#f2c14e":"#3fb7a0";x.fillRect(bx+6,by,12,6);x.fillRect(bx+8,by-2,8,2);x.fillStyle="#f2c14e";x.fillRect(bx+11,by-5,2,3);
+    x.fillStyle="#7a5a3a";x.fillRect(bx+10,by+13,4,7);x.fillStyle=(night||st>=3)?"#ffd75e":"#5a6b7a";x.fillRect(bx+3,by+10,2,3);x.fillRect(bx+19,by+10,2,3);
+    if(st>=3){x.fillStyle="rgba(255,215,94,.25)";x.fillRect(bx+8,by+11,8,9)}
+    if(big){x.fillStyle="#efe6d2";x.fillRect(bx+27,by-8,4,28);x.fillStyle=gold?"#f2c14e":"#3fb7a0";x.fillRect(bx+26,by-11,6,3);x.fillStyle="#f2c14e";x.fillRect(bx+28,by-14,2,3)}}});
+  if(well>0&&st<3)objs.push({y:100,d:()=>{const bx=88,by=92;x.fillStyle="#b9b3a6";x.fillRect(bx,by,16,6);x.fillStyle=st===2?"#7a6a52":"#3d8fe0";x.fillRect(bx+2,by+1,12,2);x.fillStyle="#b9b3a6";x.fillRect(bx+7,by-6,2,6);
+    if(st<2){x.fillStyle="#9fd6ff";for(let i=0;i<4;i++){const f=(t*2+i/4)%1;x.fillRect(bx+7+Math.round(Math.sin(i*2)*f*5),by-6-Math.round(Math.sin(f*Math.PI)*5),1,1)}}}});
+  const fireOn=(px,py,i)=>{if(st<4)return;for(let k=0;k<5;k++){const f=Math.sin(t*10+i*3+k*1.3);x.fillStyle=f>.3?"#ffd23a":f>-.3?"#ff7a1a":"#e8301a";x.fillRect(px+2+k,py-1-Math.round((f+1)*2),1,2+Math.round((f+1)))}};
+  const bare=st>=2?SPR.palm.map((r,j)=>j<4?r.replace(/g/g,".").replace(/G/g,j%2?".":"G"):r):SPR.palm;
+  for(let i=0;i<nPalm+(sproutP?1:0);i++){const r=mulberry(100+i),px=6+Math.floor(r()*125),py=50+Math.floor(r()*12),sp=i>=nPalm;
+    objs.push({y:py+13,d:()=>{if(sp){sprS(px+4,py+10,SPR.sprout)}else{sprS(px,py,bare);fireOn(px,py,i)}}})}
+  const bareF=st>=2?SPR.fruit.map((r,j)=>j<7?r.replace(/[gR]/g,".").replace(/G/g,(m,o)=>(o+j)%3?".":"G"):r):SPR.fruit;
+  for(let i=0;i<nFruit;i++){const r=mulberry(300+i),px=4+Math.floor(r()*178),py=80+Math.floor(r()*16);objs.push({y:py+10,d:()=>{sprS(px,py,bareF);fireOn(px,py,i+20)}})}
+  const fc=["#ff7eb6","#ffffff","#b78cff","#ffd75e","#ff8a5c"];
+  for(let i=0;i<nFl;i++){const r=mulberry(500+i),px=Math.floor(r()*188),py=84+Math.floor(r()*20),col=st?"#9c8a6a":fc[i%5];objs.push({y:py+3,d:()=>sprS(px,py,[".P.","PYP",".P.",".g."],col)})}
+  // white lilies of tawbah always bloom, even in the fire
+  for(let i=0;i<nLily;i++){const r=mulberry(700+i),px=10+Math.floor(r()*170),py=64+Math.floor(r()*8);objs.push({y:py+4,d:()=>spr(x,px,py,SPR.lily,PAL,false)})}
+  for(let i=0;i<nLant;i++){const px=8+i*18,py=100;objs.push({y:py+6,d:()=>{x.fillStyle="#5a4632";x.fillRect(px+1,py-4,1,8);x.fillStyle=(night||st>=3)?"#ffd75e":"#e0a53a";x.fillRect(px,py-7,3,3);
+    if(night||st>=3){x.fillStyle="rgba(255,215,94,.25)";x.fillRect(px-2,py-9,7,7)}}})}
+  objs.sort((a,b)=>a.y-b.y).forEach(o=>o.d());
+  for(let i=0;i<nBird;i++){const bx=((i*37+t*(8+i*2))%(W+20))-10,by=14+((i*13)%30)+Math.round(Math.sin(t*2+i)*2);
+    spr(x,Math.round(bx),by,(Math.floor(t*4+i)%2)?SPR.bird1:SPR.bird2,{B:night?"#cfd8ff":"#2b2b3a"},false)}
+  // embers & ash rising (3-4), ground flames (4)
+  if(st>=3){const n=st===4?60:25;for(let i=0;i<n;i++){const r=mulberry(1200+i),sx=Math.floor(r()*W),sp=6+r()*14,y=H-((t*sp+r()*H)%H);
+    x.fillStyle=st===4?(i%3?"#ff7a1a":"#ffd23a"):(i%2?"#aa4a1a":"#6a5a50");x.fillRect(sx+Math.round(Math.sin(t+i)*2),Math.round(y),1,1)}}
+  if(st===4){for(let i=0;i<W;i+=2){const f=Math.sin(t*8+i*.7)+Math.sin(t*5+i*.3);const h=3+Math.round((f+2)*2.2);
+    for(let k=0;k<h;k++){x.fillStyle=k<2?"#e8301a":k<h-2?"#ff7a1a":"#ffd23a";x.fillRect(i,H-1-k,2,1)}}}
+  const OV=[null,"rgba(60,50,40,.18)","rgba(90,60,20,.22)","rgba(120,30,0,.22)","rgba(170,20,0,.18)"][st];
+  if(OV){x.fillStyle=OV;x.fillRect(0,0,W,H)}
+  if(st===4&&Math.sin(t*1.3)>.2){x.fillStyle="rgba(255,60,0,.06)";x.fillRect(0,0,W,H)}
+}
+function drawFlame(cv,n){const x=cv.getContext("2d");x.clearRect(0,0,16,20);if(!n){x.fillStyle="#555";x.fillRect(6,14,4,4);return}
+  const t=performance.now()/1000,s=Math.min(1,.45+n/40),f=Math.sin(t*9)>0;
+  const rows=f?["......Y.........",".....YY.........","....YOY.........","....YOOY........","...YOROY........","...YORROY.......","..YORRROY.......","..YORRRROY......","..YORRWRROY.....","..YORWWWROY.....","...YOWWWOY......","....YYYYY......."]:[".......Y........","......YY........",".....YOY........","....YOOY........","....YORY........","...YORRY........","..YORRROY.......","..YORRRROY......","..YORRWRROY.....","..YORWWWROY.....","...YOWWWOY......","....YYYYY......."];
+  const P={Y:"#ffd75e",O:"#ff9f1c",R:"#ff5d2c",W:"#fff6c2"};const h=Math.round(rows.length*s),skip=rows.length-h;
+  rows.slice(skip).forEach((r,j)=>{for(let i=0;i<r.length;i++){const ch=r[i];if(ch===".")continue;x.fillStyle=P[ch];x.fillRect(i+1,j+20-h,1,1)}})}
+function gLoop(){cancelAnimationFrame(gAnim);const cv=document.getElementById("gcv"),fl=document.getElementById("flame");if(!cv)return;
+  const L=window.__L,s=window.__s,ql=window.__ql;drawGarden(cv,L,ql);if(fl)drawFlame(fl,s.cur);gAnim=requestAnimationFrame(gLoop)}
+
+function rGarden(){
+  const l=L(),g=G(),Lf=life(),s=streaks(),lv=lvl(Lf.xp),t=dkey(new Date()),ws=weekStart(t),qs=quests(ws),e=earned(Lf,s);
+  const ql=qs.filter(q=>q.ok).length;window.__L=Lf;window.__s=s;window.__ql=ql;
+  if(!S.bd){S.bd=e;save()}
+  const anyData=Object.keys(S.days).length>0;
+  let h=`<div class="sec-title" style="margin-top:4px">🌴 ${g.gTitle}</div><p class="kintro">${g.gSub}</p>
+  <div class="gwrap"><canvas id="gcv" width="192" height="108"></canvas>${!anyData?`<div class="gempty">${g.empty}</div>`:""}</div>
+  ${Lf.openPts?`<div class="hellbox s${sinStage(Lf.openPts)}"><b>${g.stg[sinStage(Lf.openPts)]}</b><p>${g.hope}</p>
+   <div class="small" style="margin:8px 0 6px;color:var(--gold2)">${g.openT}</div>${Lf.openList.map(([k,id,n])=>{const it=BY[id],r=(S.days[k].r||{})[id]||{};
+   return`<div class="rrow"><div class="rn">${it.em} ${esc(nm(it))} ×${num(n)} <span class="small">· ${k}</span></div>
+   <button class="tog ${r.t?"on":""}" data-rep="${id}" data-k="t" data-day="${k}"><span class="bx">${r.t?"✓":""}</span>${l.tawbah}</button>
+   ${it.h?`<button class="tog ${r.x?"on":""}" data-rep="${id}" data-k="x" data-day="${k}"><span class="bx">${r.x?"✓":""}</span>${l.restored}</button>`:""}</div>`}).join("")}</div>`:""}
+  <div class="grow3">
+   <div class="panel gstat"><canvas id="flame" width="16" height="20"></canvas><div><b>${num(s.cur)}</b> <span>${g.daysL}</span><div class="small">${g.streakT} · ${g.best} ${num(s.best)}</div></div></div>
+   <div class="panel gstat" style="flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:baseline"><b class="rank">${g.rank[lv.rank]}</b><span class="small">${g.level} ${num(lv.n)}</span></div>
+     <div class="xpbar"><i style="width:${Math.round(lv.pct*100)}%"></i></div><div class="small">${num(Lf.xp)} ${g.xp} · ${num(lv.left)} ${g.toNext}</div></div>
+  </div><p class="small" style="margin:6px 2px 0">🔥 ${g.qadaN}</p>
+  <div class="sec-title">⚔️ ${g.questsT}</div><p class="small" style="margin:-6px 2px 10px">${g.questN}</p><div class="quests">
+  ${qs.map(q=>{const it=BY[q.id];return`<div class="quest ${q.ok?"ok":""}"><div class="qn">${q.ok?"✅":"⬜"} ${esc(nm(it))} ×${num(q.n)}</div><div class="xpbar"><i style="width:${q.c/q.n*100}%"></i></div><div class="small">${num(q.c)}/${num(q.n)}${q.ok?" · "+g.done:""}</div></div>`}).join("")}</div>
+  <div class="sec-title">🏆 ${g.badgesT} <span class="small">${num(e.length)}/${num(BADGES.length)}</span></div><div class="badges">
+  ${BADGES.map(b=>{const[a,n]=b[2](Lf,s),ok=a>=n;return`<div class="badge ${ok?"ok":""}"><div class="bi">${b[1]}</div><div class="bn">${b[3][S.lang]}</div><div class="bd">${b[4][S.lang]}</div>${ok?"":`<div class="xpbar sm"><i style="width:${Math.min(100,a/n*100)}%"></i></div><div class="small">${num(Math.min(a,n))}/${num(n)}</div>`}</div>`}).join("")}</div>
+  <div class="sec-title">🌱 ${g.legT}</div><div class="legend2">${Object.entries(g.leg).map(([k,v])=>`<span>${{palm:"🌴",fruit:"🍎",flower:"🌸",river:"🌊",bird:"🐦",mosque:"🕌",lily:"🤍",lantern:"🏮",well:"⛲"}[k]} ${v}</span>`).join("")}</div>`;
+  setTimeout(gLoop,0);
+  return h;
+}
+
 /* ============ overlays ============ */
 const layer=document.getElementById("layer");
 function modal(html){layer.innerHTML=`<div class="ov" data-ov>${html}</div>`}
@@ -737,7 +963,7 @@ document.addEventListener("click",async e=>{
     if(it.t==="wajib"){setW(id,"c");return}
     if(it.t==="kabaira"){askKabira(id);return}
     bump(id,1);return}
-  if(el.dataset.rep){const d=ensure(cur);const r=d.r[el.dataset.rep]||(d.r[el.dataset.rep]={});r[el.dataset.k]=!r[el.dataset.k];save();render();return}
+  if(el.dataset.rep){const d=ensure(el.dataset.day||cur);const r=d.r[el.dataset.rep]||(d.r[el.dataset.rep]={});r[el.dataset.k]=!r[el.dataset.k];save();render();return}
   const a=el.dataset.act,l=L();
   if(a==="prev"){cur=shift(cur,-1);render()}
   else if(a==="next"){if(cur<dkey(new Date())){cur=shift(cur,1);render()}}
@@ -760,7 +986,7 @@ function restoreFrom(txt){const l=L();try{const o=JSON.parse(txt);if(!o||typeof 
 document.addEventListener("change",e=>{if(e.target.id==="file"){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>restoreFrom(r.result);r.readAsText(f)}});
 document.addEventListener("input",e=>{if(e.target.id==="note"){ensure(cur).note=e.target.value;save()}});
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="unpin")tryUnlock();if(e.key==="Escape"&&unlocked&&S.intro)close()});
-addEventListener("hashchange",()=>{const v=location.hash.slice(1);if(["today","mizan","kabair","settings"].includes(v)&&v!==view){view=v;render()}});
+addEventListener("hashchange",()=>{const v=location.hash.slice(1);if(["today","garden","mizan","kabair","settings"].includes(v)&&v!==view){view=v;render()}});
 render();
 </script>
 </body>
